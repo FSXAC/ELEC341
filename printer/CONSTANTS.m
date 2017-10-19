@@ -31,6 +31,12 @@ R2  = 5.9;               % (ohm)
 C   = 16;                % (uF)
 L   = 120;               % (mH)
 
+% Amplifier (units normalized)
+R1_ = R1 * 1e6;
+R2_ = R2;
+C_  = C * 1e-6;
+L_  = L * 1e-3;
+
 % Sensor
 SensV   = 5;             % Min/Max sensor outpout voltage     (V)
 SensAng = 180;           % Min/Max sensor angle               (deg)
