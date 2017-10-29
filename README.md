@@ -9,8 +9,17 @@ Refer to the project description [here](https://www.ece.ubc.ca/~leos/pdf/e341/pr
 
 #### Part I
 
-- [ ] Develop models to compute the **direct** and **inverse** kinematics of the wrist
-- [ ] Model the dynamics of the robotic wrist, including all electronics, motors, and mechanisms.
+Modifying the SimuLink files
+
+- [x] Develop models to compute the **direct** and **inverse** kinematics of the wrist
+
+
+
+Modifying `system.m` file
+
+- [ ] Model the OP AMP transfer function
+- [ ] Model the electrical dynamics function
+- [ ] Model the mechanical dynamics function
 
 #### Part II
 
