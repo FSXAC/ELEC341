@@ -39,6 +39,15 @@
 
 % Amplifier Dynamics
 % ------------------
+% Transfer function coefficients
+Amp0n0 = (C_ * R2_ * R1_) - L_;
+Amp0d0 = C_ * R1_ * R2_;
+Amp0d1 = L_ * C_ * R1_;
+
+% Transfer Function Recomputation
+Amp0n   = [Amp0n0];
+Amp0d   = [Amp0d1, Amp0d0];
+AmpSat0 = Big;
 
 % Electrical Motor Dynamics
 % -------------------------
@@ -62,6 +71,15 @@
 
 % Amplifier Dynamics
 % ------------------
+% Transfer function coefficients
+Amp1n0 = (C_ * R2_ * R1_) - L_;
+Amp1d0 = C_ * R1_ * R2_;
+Amp1d1 = L_ * C_ * R1_;
+
+% Transfer Function Recomputation
+Amp1n   = [Amp1n0];
+Amp1d   = [Amp1d1, Amp1d0];
+AmpSat1 = Big;
 
 % Electrical Motor Dynamics
 % -------------------------

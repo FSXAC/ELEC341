@@ -74,15 +74,9 @@ StFric0 = 0;
 % Q1 - Rotation about x-axis
 % ==========================
 
-% =====[ Amplifier Dynamics ]=====
-% Transfer function coefficients
-Amp1n0 = (C_ * R2_ * R1_) - L_;
-Amp1d0 = C_ * R1_ * R2_;
-Amp1d1 = L_ * C_ * R1_;
-
-% Transfer Function construction
-Amp1n   = [Amp1n0];          % Numerator
-Amp1d   = [Amp1d1, Amp1d0];  % Denominator
+% Amplifier Dynamics
+Amp1n   = [1];               % Numerator
+Amp1d   = [1];               % Denominator
 AmpSat1 = Big;
 
 % Electrical Motor Dynamics
