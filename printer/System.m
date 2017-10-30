@@ -57,13 +57,19 @@ Amp0d0 = C_ * R1_ * R2_;
 Amp0d1 = L_ * C_ * R1_;
 
 % Transfer Function Recomputation
-Amp0n   = [Amp0n0];
-Amp0d   = [Amp0d1, Amp0d0];
+Amp0n   = Amp0n0;
+Amp0d   = [Amp0d1 Amp0d0];
 AmpSat0 = Big;
 
 % =====================[Electrical Motor Dynamics]========================
-Elec0n = [1];
-Elec0d = [1];
+% This specifies the transfer function for the electric motor
+% INPUT: voltage (V)
+% OUTPUT: current (A)
+Elec0n = 1;
+
+Elec0d0 = MotorParam(TermR);
+Elec0d1 = MotorParam(TermL) * MILLIS_TO;
+Elec0d = [Elec0d0, Elec0d1];
 
 % =====================[Torque Const & Back EMF]========================
 % TORQUE CONSTANT
@@ -112,12 +118,9 @@ Amp1n   = Amp0n;
 Amp1d   = Amp0d;
 AmpSat1 = Big;
 
-
-
 % =====================[Electrical Motor Dynamics]========================
-Elec1n = [1];
-Elec1d = [1];
-
+Elec1n = Elec0n;
+Elec1d = Elec0d;
 
 % =====================[Torque Const & Back EMF]========================
 % NOTE: Current using identical values from q0 motor
