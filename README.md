@@ -7,9 +7,11 @@ Refer to the project description [here](https://www.ece.ubc.ca/~leos/pdf/e341/pr
 
 ### Project Description
 
+### Tasks
+
 #### Part I
 
-Modifying the SimuLink files
+Modify `printer.slx`
 
 - [x] Develop models to compute the **direct** and **inverse** kinematics of the wrist
 
@@ -18,8 +20,12 @@ Modifying the SimuLink files
 Modifying `system.m` file
 
 - [ ] Model the OP AMP transfer function
+
 - [ ] Model the electrical dynamics function
+
 - [ ] Model the mechanical dynamics function
+
+      For this part, we might need to refer to the [moment of inertia equations](https://en.wikipedia.org/wiki/List_of_moments_of_inertia) and [motor equations](https://www.ece.ubc.ca/~leos/pdf/e341/handouts/desproj/MaxonSpecs.pdf)
 
 #### Part II
 
