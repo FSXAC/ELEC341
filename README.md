@@ -15,6 +15,8 @@ Modify `printer.slx`
 
 - [x] Develop models to compute the **direct** and **inverse** kinematics of the wrist
 
+      ![kinematics](https://raw.githubusercontent.com/FSXAC/ELEC341/master/docs/q0q1.jpg)
+
 
 
 Modifying `system.m` file
