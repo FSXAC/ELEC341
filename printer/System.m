@@ -20,11 +20,6 @@ L_  = L * 1e-3;
 MILLIS_TO = 1e3;
 TO_MILLIS = 1e-3;
 
-% Angular/linear uit conversion
-RPM_TO_RAD_PER_SEC = 2 * pi / 60;
-RAD_PER_SEC_TO_RPM = 1 / RPM_TO_RAD_PER_SEC;
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Over-write the default values from DEFAULT.m %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -92,20 +87,29 @@ TConst0 = MotorParam(TorqueK) * MILLIS_TO;
 % - `MotorParam(SpdK)` has units (rpm/V)
 
 % First we convert from (rpm/V) to ((rad/s)/V)
-BackEMF0_inv = MotorParam(SpdK) * RPM_TO_RAD_PER_SEC;
+BackEMF0_inv = MotorParam(SpdK) * RadPSecPerRPM;
 
 % Then convert from ((rad/s)/V) to (V/(rad/s))
 BackEMF0 = 1 / BackEMF0_inv;
 
 % =====================[Mechanical Motor Dynamics]========================
-
+% TODO:
+Mech0n  = [1];
+Mech0d  = [1];
+JntSat0 = Big;
 
 
 % =====================[Sensor Dynamics]========================
-
+% TODO:
+Sens0    = 0;
+SensSat0 = Big;
 
 
 % =====================[Static Friction]========================
+% TODO:
+StFric0 = 0;
+
+
 
 
 % =============================
@@ -129,15 +133,21 @@ BackEMF1 = BackEMF0;
 
 
 % =====================[Mechanical Motor Dynamics]========================
-
+% TODO:
+Mech1n  = [1];
+Mech1d  = [1];
+JntSat1 = Big;
 
 
 % =====================[Sensor Dynamics]========================
-
+% TODO:
+Sens1    = 0;
+SensSat1 = Big;
 
 
 % =====================[Static Friction]========================
-
+% TODO:
+StFric1 = 0;
 
 
 
@@ -149,3 +159,4 @@ BackEMF1 = BackEMF0;
 
 % Amplifier Transfer Function
 tf_amp = tf(Amp0n, Amp0d);
+tf_elec = tf(Elec0n, Elec0d);
