@@ -15,9 +15,7 @@ Modify `printer.slx`
 
 - [x] Develop models to compute the **direct** and **inverse** kinematics of the wrist
 
-      ![kinematics](https://raw.githubusercontent.com/FSXAC/ELEC341/master/docs/q0q1.jpg)
-
-
+<img src="https://raw.githubusercontent.com/FSXAC/ELEC341/master/docs/q0q1.jpg" width="400px">
 
 Modifying `system.m` file
 
@@ -27,10 +25,10 @@ Modifying `system.m` file
 
 - [ ] Model the mechanical dynamics function
 
-      - The default motor is **Maxon A-Max 22mm 5W** 
 
+- The default motor is **Maxon A-Max 22mm 5W** 
 
-      - For this part, we might need to refer to the [moment of inertia equations](https://en.wikipedia.org/wiki/List_of_moments_of_inertia) and [motor equations](https://www.ece.ubc.ca/~leos/pdf/e341/handouts/desproj/MaxonSpecs.pdf)
+- For this part, we might need to refer to the [moment of inertia equations](https://en.wikipedia.org/wiki/List_of_moments_of_inertia) and [motor equations](https://www.ece.ubc.ca/~leos/pdf/e341/handouts/desproj/MaxonSpecs.pdf)
 
 #### Part II
 
