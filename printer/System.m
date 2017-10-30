@@ -11,6 +11,13 @@
 % Example: if you decide to work in (Kg), all masses must be represented
 %          in (Kg) but the spec sheet may provide masses in (g)
 
+% Prefix conversion
+MILLIS_TO = 1e3;
+TO_MILLIS = 1e-3;
+
+% Angular/linear uit conversion
+RPM_TO_RAD_PER_SEC = 2 * pi / 60;
+RAD_PER_SEC_TO_RPM = 1 / RPM_TO_RAD_PER_SEC;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -51,12 +58,33 @@ AmpSat0 = Big;
 
 % =====================[Electrical Motor Dynamics]========================
 Elec0n = [1];
-Elec1n = [1];
-
+Elec0d = [1];
 
 % =====================[Torque Const & Back EMF]========================
+% TORQUE CONSTANT
+% - Between the output of electric dynamics and input of mechanical dynamics
+% - Torque = K_T * Current
+% - (Nm)   = K_T * (A) 
+%
+% - K_T has units (Nm/A)
+% - `MotorParam(TorqueK)` has units (mNm/A)
+% - need to convert to (Nm/A)
+TConst0 = MotorParam(TorqueK) * MILLIS_TO;
 
+% SPEED CONSTANT
+% - Feedback gain
+% - Between the output speed (rad/s) to electric dynamic input (V)
+% - Back EMF = K_V * Speed
+% - (V)      = K_V * (rad/s)
+%
+% - K_V has units (V*s/rad)
+% - `MotorParam(SpdK)` has units (rpm/V)
 
+% First we convert from (rpm/V) to ((rad/s)/V)
+BackEMF0_inv = MotorParam(SpdK) * RPM_TO_RAD_PER_SEC;
+
+% Then convert from ((rad/s)/V) to (V/(rad/s))
+BackEMF0 = 1 / BackEMF0_inv;
 
 % =====================[Mechanical Motor Dynamics]========================
 
@@ -82,11 +110,14 @@ AmpSat1 = Big;
 
 
 % =====================[Electrical Motor Dynamics]========================
-
+Elec1n = [1];
+Elec1d = [1];
 
 
 % =====================[Torque Const & Back EMF]========================
-
+% NOTE: Current using identical values from q0 motor
+TConst1  = TConst0;
+BackEMF1 = BackEMF0;
 
 
 % =====================[Mechanical Motor Dynamics]========================
