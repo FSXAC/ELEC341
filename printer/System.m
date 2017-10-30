@@ -10,6 +10,11 @@
 % ========================
 % Example: if you decide to work in (Kg), all masses must be represented
 %          in (Kg) but the spec sheet may provide masses in (g)
+% Amplifier circuit elements (units normalized)
+R1_ = R1 * 1e6;
+R2_ = R2;
+C_  = C * 1e-6;
+L_  = L * 1e-3;
 
 % Prefix conversion
 MILLIS_TO = 1e3;
