@@ -113,7 +113,7 @@ StFric0 = 0;
 
 
 % =============================
-% Q1 : Rotation about x-axis
+% Q1 : Rotation about x-axis (Only carrying the laser)
 % =============================
 
 % =====================[Amplifier Dynamics]========================
@@ -133,9 +133,27 @@ BackEMF1 = BackEMF0;
 
 
 % =====================[Mechanical Motor Dynamics]========================
-% TODO:
-Mech1n  = [1];
-Mech1d  = [1];
+% Transfer function is given as:
+% TF(S) = ______s______
+%         Js^2 + Bs + K
+
+% Get rotor inertia and do unit conversion
+J_rotor = MotorParam(RotJ); % g/cm^2
+J_rotor = J_rotor * 1e3;    % kg/cm^2
+J_rotor = J_rotor * 1e4;    % kg/m^2
+
+% Motor speed torque gradient and do unit conversion
+B_motor = MotorParam(SpdTorqueGrad);    % rpm/mNm
+B_motor = B_motor * 1e-3;               % rpm/Nm
+B_motor = B_motor * RadPSecPerRPM;      % (rad/s)/Nm
+B_motor = 1 / B_motor;                  % Nm/(rad/s)
+
+J = J_rotor;
+B = B_motor;
+K = 0;
+
+Mech1n  = [1, 0];
+Mech1d  = [J, B, K];
 JntSat1 = Big;
 
 
