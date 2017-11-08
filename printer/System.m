@@ -1,6 +1,6 @@
 % This script sets the model parameters for the SLS 3-D Printer...
 
-% Example: Specifying a Dynamics Block
+% Example: Specifying a Dynamics Block.....
 % n = [1 2 3];
 % d = [4 5 6];
 % Transfer Function = (s^2 + 2s + 3) / (4s^2 + 5s + 6)
