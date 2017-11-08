@@ -1,4 +1,4 @@
-% This script sets the model parameters for the SLS 3-D Printer...
+% This script sets the model parameters for the SLS 3-D Printer
 
 % Example: Specifying a Dynamics Block
 % n = [1 2 3];
@@ -19,6 +19,9 @@ L_  = L * 1e-3;
 % Prefix conversion
 MILLIS_TO = 1e3;
 TO_MILLIS = 1e-3;
+
+%rmp to rad/s conversion
+RadPSecPerRPM= 2*pi/60
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Over-write the default values from DEFAULT.m %
@@ -52,6 +55,9 @@ Amp0d0 = C_ * R1_ * R2_;
 Amp0d1 = L_ * C_ * R1_;
 
 % Transfer Function Recomputation
+% TF= ______Amp0n0______ = ___C_ * R1_ * R2____
+%      Amp0d1*s + Amp0d0   L_ * C_ * R1_*s + C_ * R1_ * R2_
+
 Amp0n   = Amp0n0;
 Amp0d   = [Amp0d1 Amp0d0];
 AmpSat0 = Big;
@@ -60,11 +66,13 @@ AmpSat0 = Big;
 % This specifies the transfer function for the electric motor
 % INPUT: voltage (V)
 % OUTPUT: current (A)
+% TF= ______Elec0d0______ = ___1_______________
+%      Elec0d1*s + Elec0d0    TermL*s + TermR 
 Elec0n = 1;
 
 Elec0d0 = MotorParam(TermR);
 Elec0d1 = MotorParam(TermL) * MILLIS_TO;
-Elec0d = [Elec0d0, Elec0d1];
+Elec0d = [Elec0d1 Elec0d0];
 
 % =====================[Torque Const & Back EMF]========================
 % TORQUE CONSTANT
@@ -94,6 +102,13 @@ BackEMF0 = 1 / BackEMF0_inv;
 
 % =====================[Mechanical Motor Dynamics]========================
 % TODO:
+
+% J related to motor inertia, ring inertia, and motor and counterweight inertia
+K_0=0
+
+J_rotor_0=
+B_rotor_0=
+
 Mech0n  = [1];
 Mech0d  = [1];
 JntSat0 = Big;
@@ -118,11 +133,14 @@ StFric0 = 0;
 
 % =====================[Amplifier Dynamics]========================
 % Since the same amplifier is used on both motors, the transfer function is the same
+
 Amp1n   = Amp0n;
 Amp1d   = Amp0d;
 AmpSat1 = Big;
 
 % =====================[Electrical Motor Dynamics]========================
+% Since the same electric motor is used on both motors, the transfer function is the same
+
 Elec1n = Elec0n;
 Elec1d = Elec0d;
 
@@ -137,6 +155,8 @@ BackEMF1 = BackEMF0;
 % TF(S) = ______s______
 %         Js^2 + Bs + K
 
+% unit of J is kg*m^2
+% unit of B is kg*m^2/s^2
 % Get rotor inertia and do unit conversion
 J_rotor = MotorParam(RotJ); % g/cm^2
 J_rotor = J_rotor * 1e3;    % kg/cm^2
@@ -148,12 +168,12 @@ B_motor = B_motor * 1e-3;               % rpm/Nm
 B_motor = B_motor * RadPSecPerRPM;      % (rad/s)/Nm
 B_motor = 1 / B_motor;                  % Nm/(rad/s)
 
-J = J_rotor;
-B = B_motor;
-K = 0;
+J_1 = J_rotor;
+B_1 = B_motor;
+K_1 = 0; %friction is negligible once motor starts moving
 
 Mech1n  = [1, 0];
-Mech1d  = [J, B, K];
+Mech1d  = [J B K];
 JntSat1 = Big;
 
 
