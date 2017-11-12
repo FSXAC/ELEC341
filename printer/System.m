@@ -129,7 +129,7 @@ ring_mass   = ring_volume * alum_density;                   % Mass   (kg)
 % - 'r_1' is inner radius       (m)
 % - 'r_2' is outer radius       (m)
 % - 'h' is height / length      (m)
-ring_J = (mass / 12) * (3 * (link_iR^2 + link_oR^2) + link_depth^2);
+ring_J = (ring_mass / 12) * (3 * (link_iR^2 + link_oR^2) + link_depth^2);
 
 % Moment of inertia from motor's internal rotor
 rotor_J = MotorParam(RotJ) * 1e3 * 1e-4;     %(kgm^2)
@@ -152,7 +152,7 @@ q1_imaginary_J   = (motor_density * link_offset * (motor_radius)^2 * pi) * link_
 q1_weight_J      = q1_extended_J - q1_imaginary_J;
 
 % The moment of inertia from the counter weight
-counter_weight_J = q1_weight_J
+counter_weight_J = q1_weight_J;
 
 %now find the value of B which is the same as q1
 B_motor_q0 = MotorParam(SpdTorqueGrad);       % rpm/mNm
