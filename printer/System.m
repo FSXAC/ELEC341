@@ -21,7 +21,6 @@ MILLIS_TO = 1e3;
 TO_MILLIS = 1e-3;
 
 %rmp to rad/s conversion
-RadPSecPerRPM= 2*pi/60
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Over-write the default values from DEFAULT.m %
@@ -104,13 +103,26 @@ BackEMF0 = 1 / BackEMF0_inv;
 % TODO:
 
 % J related to motor inertia, ring inertia, and motor and counterweight inertia
+%find J due to the ring..
 ring_mass=(LinkR2-LinkR1)*1e-3*LinkD*1e-3 %mass in g
 ring_J=mass/12*(3*((LinkR2*1e-3)^2+(LinkR1*1e-3)^2)+LinkD^2)  %ring_J in g/m^2
 ring_J=ring_J*1e3 %ring_J in kg/m^2
 
+%find the J of the motor as it rotates. Same as q1
 motor_J=MotorParam(RotJ)* 1e3* 1e4 % motor_J in kg/m^2
+motor_density= MotorParam(Weight) / ((MotorParam(OuterDiam)/2)^2*pi*MotorParam(Length))
 
-counter_weight_J=
+%use superposition to find J due to the the weight of q1 and J due to the counter weight
+q1_weight_J = (Weight+motor_density*LinkOff*(MotorParam(OuterDiam)/2)^2*pi)*(LinkOff+Length)^2/3 - motor_density*LinkOff*(MotorParam(OuterDiam)/2)^2*pi*LinkOff^2/3
+counter_weight_J= q1_weight_J
+
+%now find the value of B which is the same as q1
+B_motor_q0 = MotorParam(SpdTorqueGrad);    % rpm/mNm
+B_motor_q0 = B_motor_q0 * 1e-3;               % rpm/Nm
+B_motor_q0 = B_motor_q0 * RadPSecPerRPM;      % (rad/s)/Nm
+B_motor_q0 = 1 / B_motor_q0;                  % Nm/(rad/s)
+
+%still need to put J's and B's into an array....But need some confirmation first :\
 
 Mech0n  = [1];
 Mech0d  = [1];
