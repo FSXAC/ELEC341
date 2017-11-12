@@ -71,7 +71,7 @@ AmpSat0 = Big;
 Elec0n = 1;
 
 Elec0d0 = MotorParam(TermR);
-Elec0d1 = MotorParam(TermL) * MILLIS_TO;
+Elec0d1 = MotorParam(TermL) / MILLIS_TO; %convert mH to H
 Elec0d = [Elec0d1 Elec0d0];
 
 % =====================[Torque Const & Back EMF]========================
@@ -104,8 +104,12 @@ BackEMF0 = 1 / BackEMF0_inv;
 % TODO:
 
 % J related to motor inertia, ring inertia, and motor and counterweight inertia
-ring_J=
-motor_J=
+ring_mass=(LinkR2-LinkR1)*1e-3*LinkD*1e-3 %mass in g
+ring_J=mass/12*(3*((LinkR2*1e-3)^2+(LinkR1*1e-3)^2)+LinkD^2)  %ring_J in g/m^2
+ring_J=ring_J*1e3 %ring_J in kg/m^2
+
+motor_J=MotorParam(RotJ)* 1e3* 1e4 % motor_J in kg/m^2
+
 counter_weight_J=
 
 Mech0n  = [1];
