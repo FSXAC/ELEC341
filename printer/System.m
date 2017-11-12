@@ -171,16 +171,14 @@ JntSat0 = Big;
 
 
 % =====================[Sensor Dynamics]========================
-% TODO:
+% TODO: Check work
 Sens0    = 0;
-SensSat0 = Big;
+SensSat0 = SensV;
 
 
 % =====================[Static Friction]========================
-% TODO:
-StFric0 = 0;
-
-
+% TODO: Check work
+StFric0 = uSF;
 
 
 % =============================
@@ -237,14 +235,12 @@ JntSat1 = Big;
 % =====================[Sensor Dynamics]========================
 % TODO:
 Sens1    = 0;
-SensSat1 = Big;
+SensSat1 = SensV;
 
 
 % =====================[Static Friction]========================
 % TODO:
-StFric1 = 0;
-
-
+StFric1 = uSF;
 
 % ==========================================
 % Transfer Functions
