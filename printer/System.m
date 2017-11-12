@@ -20,7 +20,16 @@ L_  = L * 1e-3;
 MILLIS_TO = 1e3;
 TO_MILLIS = 1e-3;
 
-%rmp to rad/s conversion
+% Geometry conversion
+link_iR     = LinkR1 * 1e-3;    % (m)
+link_oR     = LinkR2 * 1e-3;    % (m)
+link_depth  = LinkD * 1e-3;     % (m)
+link_offset = LinkOff * 1e-3;   % (m)
+
+% Material and spring constant
+alum_density = RhoAl * 1e3;         % (kg/m^3)
+spring_k     = SpringK * 1e-3;      % (Nm/rev)
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Over-write the default values from DEFAULT.m %
@@ -100,32 +109,64 @@ BackEMF0_inv = MotorParam(SpdK) * RadPSecPerRPM;
 BackEMF0 = 1 / BackEMF0_inv;
 
 % =====================[Mechanical Motor Dynamics]========================
-% TODO:
 
-% J related to motor inertia, ring inertia, and motor and counterweight inertia
-%find J due to the ring..
-ring_mass=(LinkR2-LinkR1)*1e-3*LinkD*1e-3 %mass in g
-ring_J=mass/12*(3*((LinkR2*1e-3)^2+(LinkR1*1e-3)^2)+LinkD^2)  %ring_J in g/m^2
-ring_J=ring_J*1e3 %ring_J in kg/m^2
+% =====================[Moment of Inertia Calculations]========================
+% Moment of Inertia (J) is contributed by:
+% - Wrist frame (aluminium)
+% - Rotor
+% - Inner motor (q1)
+% - Counter weight (aluminium) 
 
-%find the J of the motor as it rotates. Same as q1
-motor_J=MotorParam(RotJ)* 1e3* 1e4 % motor_J in kg/m^2
-motor_density= MotorParam(Weight) / ((MotorParam(OuterDiam)/2)^2*pi*MotorParam(Length))
+% Moment of inertia due to the wrist frame
+ring_volume = (link_oR^2 - link_iR^2) * pi * link_depth;    % Volume (m^3)
+ring_mass   = ring_volume * alum_density;                   % Mass   (kg)
 
-%use superposition to find J due to the the weight of q1 and J due to the counter weight
-q1_weight_J = (Weight+motor_density*LinkOff*(MotorParam(OuterDiam)/2)^2*pi)*(LinkOff+Length)^2/3 - motor_density*LinkOff*(MotorParam(OuterDiam)/2)^2*pi*LinkOff^2/3
-counter_weight_J= q1_weight_J
+% Moment of inertial from the cylindrical shell given by formula:
+% J = (m/12)*(3*(r_1^2+r_2^2)+h^2)
+% Where:
+% - 'J' is moment of inertia    (kgm^2)
+% - 'm' is mass                 (kg)
+% - 'r_1' is inner radius       (m)
+% - 'r_2' is outer radius       (m)
+% - 'h' is height / length      (m)
+ring_J = (mass / 12) * (3 * (link_iR^2 + link_oR^2) + link_depth^2);
+
+% Moment of inertia from motor's internal rotor
+rotor_J = MotorParam(RotJ) * 1e3 * 1e-4;     %(kgm^2)
+
+motor_length  = MotorParam(Length) * 1e-3;       % (m)
+motor_radius  = MotorParam(OuterDiam) / 2 * 1e-3; % (m)
+motor_weight  = MotorParam(Weight) * 1e-3;       % (kg)
+motor_density = motor_weight / (motor_radius^2 * pi * motor_length);    % (kg/m^3)
+
+
+% The moment of inertia for a rod turning on its end is given as:
+% J = (1/3)ml^2
+% Where:
+% - 'J' is moment of inertia    (kgm^2)
+% - 'm' is mass                 (kg)
+% - 'l' is the length of rod    (m)
+q1_extended_mass = motor_weight + (motor_density * link_offset * motor_radius^2 * pi); % (kg)
+q1_extended_J    = q1_extended_mass*(link_offset + motor_length)^2 / 3;    % (kgm^2)
+q1_imaginary_J   = (motor_density * link_offset * (motor_radius)^2 * pi) * link_offset^2 / 3;
+q1_weight_J      = q1_extended_J - q1_imaginary_J;
+
+% The moment of inertia from the counter weight
+counter_weight_J = q1_weight_J
 
 %now find the value of B which is the same as q1
-B_motor_q0 = MotorParam(SpdTorqueGrad);    % rpm/mNm
+B_motor_q0 = MotorParam(SpdTorqueGrad);       % rpm/mNm
 B_motor_q0 = B_motor_q0 * 1e-3;               % rpm/Nm
 B_motor_q0 = B_motor_q0 * RadPSecPerRPM;      % (rad/s)/Nm
 B_motor_q0 = 1 / B_motor_q0;                  % Nm/(rad/s)
 
-%still need to put J's and B's into an array....But need some confirmation first :\
+% Putting it all together
+J_0 = ring_J + rotor_J + q1_weight_J + counter_weight_J;
+B_0 = B_motor_q0;
+K_0 = 0;
 
-Mech0n  = [1];
-Mech0d  = [1];
+Mech0n  = [1, 0];
+Mech0d  = [J_0, B_0, K_0];
 JntSat0 = Big;
 
 
@@ -173,9 +214,10 @@ BackEMF1 = BackEMF0;
 % unit of J is kg*m^2
 % unit of B is kg*m^2/s^2
 % Get rotor inertia and do unit conversion
+% TODO: FiX
 J_rotor = MotorParam(RotJ); % g/cm^2
 J_rotor = J_rotor * 1e3;    % kg/cm^2
-J_rotor = J_rotor * 1e4;    % kg/m^2
+J_rotor = J_rotor * 1e-4;    % kg/m^2
 
 % Motor speed torque gradient and do unit conversion
 B_motor = MotorParam(SpdTorqueGrad);    % rpm/mNm
