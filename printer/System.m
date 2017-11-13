@@ -157,7 +157,7 @@ counter_weight_J = q1_weight_J;
 %now find the value of B which is the same as q1
 B_motor_q0 = MotorParam(SpdTorqueGrad);       % rpm/mNm
 B_motor_q0 = B_motor_q0 * 1e-3;               % rpm/Nm
-B_motor_q0 = B_motor_q0 * RadPSecPerRPM;      % (rad/s)/Nm
+B_motor_q0 = B_motor_q0 * RadPSecPerRPM;      % (rad/s)/Nm		
 B_motor_q0 = 1 / B_motor_q0;                  % Nm/(rad/s)
 
 % Putting it all together
