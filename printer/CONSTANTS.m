@@ -1,8 +1,6 @@
 % This script contains all physical constants and specifications for the
 % SLS 3-D Printer
 
-% TODO: 
-
 % Start with a clean slate
 % Erase entire Matlab environment
 clear all;

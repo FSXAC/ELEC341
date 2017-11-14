@@ -31,7 +31,7 @@ alum_density = RhoAl * 1e3;                     % (kg/m^3)
 spring_k     = SpringK * 1e-3 / (2 * pi);       % (Nm/rad)
 
 % Coefficient of static friction
-% --
+mu_SF = uSF * 1e-6;             % (m)
 
 % Joint limit
 joint_limit = JntLim * DegPerRad;               % (rad)
@@ -235,8 +235,11 @@ Sens0    = 0;
 SensSat0 = SensV;
 
 % =====================[Static Friction]========================
-% TODO: Check work (not quite)
-StFric0 = uSF;
+% TODO: Check work (I don't think it's right)
+% computing the force of gravity acting on the inner assembly
+inner_mass = 2 * motor_mass + ring_mass;        % (kg)
+inner_fg   = G * inner_mass;                    % (N)
+StFric0    = uSF * inner_fg;                    % (Nm) ?
 
 % =============================
 % Q1 : Rotation about x-axis (Only carrying the laser)
