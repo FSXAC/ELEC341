@@ -96,6 +96,7 @@ motor_param = ...
 % Q0 : Rotation about y-axis
 % =============================
 % =====================[Amplifier Dynamics]========================
+% TODO: Check calculations
 % Transfer function coefficients
 Amp0n0 = (C_ * R2_ * R1_) - L_;
 Amp0d0 = C_ * R1_ * R2_;
@@ -114,38 +115,25 @@ AmpSat0 = Big;
 % INPUT: voltage (V)
 % OUTPUT: current (A)
 % TF= ______Elec0d0______ = ___1_______________
-%      Elec0d1*s + Elec0d0    TermL*s + TermR 
-Elec0n = 1;
+%      Elec0d1*s + Elec0d0    TermL*s + TermR
 
-Elec0d0 = MotorParam(TermR);                % (Ohms)
-Elec0d1 = MotorParam(TermL) * 1e3;          % (H)
-Elec0d = [Elec0d1, Elec0d0];
+Elec0d0 = motor_param(TermR);                % (Ohms)
+Elec0d1 = motor_param(TermL) * 1e3;          % (H)
+Elec0n  = 1;
+Elec0d  = [Elec0d1, Elec0d0];
 
 % =====================[Torque Const & Back EMF]========================
 % TORQUE CONSTANT
-% - Between the output of electric dynamics and input of mechanical dynamics
-% - Torque = K_T * Current
-% - (Nm)   = K_T * (A) 
-%
-% - K_T has units (Nm/A)
-% - `MotorParam(TorqueK)` has units (mNm/A)
-% - need to convert to (Nm/A)
-TConst0 = MotorParam(TorqueK) * MILLIS_TO;
+% The gain between the output of electric dynamics and input of mechanical dynamics
+% Equation: Torque = K_T    * Current
+% Units:    (Nm)   = (Nm/A) * (A) 
+TConst0 = motor_param(TorqueK);     % (Nm/A)
 
 % SPEED CONSTANT
-% - Feedback gain
-% - Between the output speed (rad/s) to electric dynamic input (V)
-% - Back EMF = K_V * Speed
-% - (V)      = K_V * (rad/s)
-%
-% - K_V has units (V*s/rad)
-% - `MotorParam(SpdK)` has units (rpm/V)
-
-% First we convert from (rpm/V) to ((rad/s)/V)
-BackEMF0_inv = MotorParam(SpdK) * RadPSecPerRPM;
-
-% Then convert from ((rad/s)/V) to (V/(rad/s))
-BackEMF0 = 1 / BackEMF0_inv;
+% The gain between the output speed and induced back-EMF
+% Equation: Back EMF = K_V         * Speed
+% Units:    (V)      = (V/(rad/s)) * (rad/s)
+BackEMF0 = 1 / motor_param(SpdK);   % (V/(rad/s))
 
 % =====================[Mechanical Motor Dynamics]========================
 % Transfer function is given as:
