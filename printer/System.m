@@ -30,6 +30,12 @@ link_offset = LinkOff * 1e-3;   % (m)
 alum_density = RhoAl * 1e3;                     % (kg/m^3)
 spring_k     = SpringK * 1e-3 / (2 * pi);       % (Nm/rad)
 
+% Coefficient of static friction
+% --
+
+% Joint limit
+joint_limit = JntLim * DegPerRad;               % (rad)
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Over-write the default values from DEFAULT.m %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -106,6 +112,8 @@ Amp0d1 = L_ * C_ * R1_;
 
 Amp0n   = Amp0n0;
 Amp0d   = [Amp0d1 Amp0d0];
+
+% TODO: amplifier saturation voltagae
 AmpSat0 = Big;
 
 % =====================[Electrical Motor Dynamics]========================
@@ -217,6 +225,7 @@ Mech0n  = [1, 0];
 Mech0d  = [J_0, B_0, K_0];
 
 % Motor q0 has unlimited joint limit
+% TODO: Check
 JntSat0 = Big;
 
 % =====================[Sensor Dynamics]========================
@@ -237,6 +246,8 @@ StFric0 = uSF;
 % Since the same amplifier is used on both motors, the transfer function is the same
 Amp1n   = Amp0n;
 Amp1d   = Amp0d;
+
+% TODO: amplifier saturation voltagae
 AmpSat1 = Big;
 
 % =====================[Electrical Motor Dynamics]========================
@@ -258,21 +269,17 @@ BackEMF1 = BackEMF0;
 % The unit of K is kgm^2/s^2
 
 % Get rotor inertia and do unit conversion
-J_rotor = MotorParam(RotJ); % gcm^2
-J_rotor = J_rotor * 1e3;    % kgcm^2
-J_rotor = J_rotor * 1e-4;   % kgm^2
+q1_rotor_J = motor_param(RotJ);     % (kgm^2)
 
 % Motor speed torque gradient and do unit conversion
-B_motor = MotorParam(SpdTorqueGrad);    % rpm/mNm
-B_motor = B_motor * 1e3;                % rpm/Nm
-B_motor = B_motor * RadPSecPerRPM;      % (rad/s)/Nm
-B_motor = 1 / B_motor;                  % Nm/(rad/s) === kgm^2/s
+q1_B = motor_param(SpdTorqueGrad);  % (Nm/(rad/s))
 
+% Putting it all together
 % Moment of inertia only depends on the rotor
-J_1 = J_rotor;
+J_1 = q1_rotor_J;
 
 % Friction
-B_1 = B_motor;
+B_1 = q1_B;
 
 % Inner motor has no spring behavior
 K_1 = 0;
@@ -282,7 +289,7 @@ Mech1n  = [1, 0];
 Mech1d  = [J_1, B_1, K_1];
 
 % Maximum the joint can turn
-JntSat1 = JntLim * RadPerDeg;           % (rad)
+JntSat1 = joint_limit;
 
 
 % =====================[Sensor Dynamics]========================
