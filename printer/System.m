@@ -29,33 +29,72 @@ link_offset = LinkOff * 1e-3;   % (m)
 % Material and spring constant
 alum_density = RhoAl * 1e3;         % (kg/m^3)
 spring_k     = SpringK * 1e-3;      % (Nm/rev)
+spring_k     = spring_k / (2 * pi); % (Nm/rad)
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Over-write the default values from DEFAULT.m %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % ==========================
 % Choose Motors
 % ==========================
 
-% Motor Unit Conversions
-% ----------------------
+
+% =====================[Motor Parameter Unit Conversion]========================
+motor_param = ...
+[
+    MotorParam(NomV)                        % (V)
+    MotorParam(NoLoadSpd) * RadPSecPerRPM   % (rad/s)
+    MotorParam(NoLoadCurr) * 1e-3           % (A)
+    MotorParam(NomSpd) * RadPSecPerRPM      % (rad/s)
+    MotorParam(NomTorque) * 1e-3            % (Nm)
+    MotorParam(NomCurr) * 1e-3              % (A)
+    MotorParam(StallTorque) * 1e-3          % (Nm)
+    MotorParam(StallCurr)                   % (A)
+    MotorParam(MaxEff)                      % (%)
+
+    MotorParam(TermR)                       % (Ohms)
+    MotorParam(TermL) * 1e-3                % (H)
+    MotorParam(TorqueK) * 1e-3              % (Nm/A)
+    MotorParam(SpdK) * RadPSecPerRPM        % ((rad/s)/V)
+    MotorParam(SpdTorqueGrad) * 1e3 * RadPSecPerRPM     % ((rad/s)/Nm)
+    MotorParam(MechTimeK) * 1e-3            % (s)
+    MotorParam(RotJ) * 1e-3 * 1e-4          % (kgm^2)
+
+    MotorParam(ThermRhous)                  % (K/W)
+    MotorParam(ThermRwind)                  % (K/W)
+    MotorParam(ThermTCwind)                 % (s)
+    MotorParam(ThermTCmot)                  % (s)
+    MotorParam(AmbTemp)                     % (degC)
+    MotorParam(MaxTemp)                     % (degC)
+
+    MotorParam(MaxSpdBall) * RadPSecPerRPM  % (rad/s)
+    MotorParam(AxialPlayBall) * 1e-3        % (m)
+    MotorParam(RadPlayBall) * 1e-3          % (m)
+    MotorParam(MaxAxLdBall)                 % (N)
+    MotorParam(MaxFBall)                    % (N)
+    MotorParam(MaxRadLdBall)                % (N)
+
+    MotorParam(NoPolePair)                  % ()
+    MotorParam(NoCommSeg)                   % ()
+    MotorParam(Weight) * 1e-3               % (kg)
+
+    MotorParam(OuterDiam) * 1e-3            % (m)
+    MotorParam(Length) * 1e-3               % (m)
+];
 
 
 % ==========================
 % Motor Parameters
 % ==========================
-
 % Maximum Current
 % ---------------
+
 
 
 % =============================
 % Q0 : Rotation about y-axis
 % =============================
-
-
 % =====================[Amplifier Dynamics]========================
 % Transfer function coefficients
 Amp0n0 = (C_ * R2_ * R1_) - L_;
@@ -78,9 +117,9 @@ AmpSat0 = Big;
 %      Elec0d1*s + Elec0d0    TermL*s + TermR 
 Elec0n = 1;
 
-Elec0d0 = MotorParam(TermR);
-Elec0d1 = MotorParam(TermL) / MILLIS_TO; %convert mH to H
-Elec0d = [Elec0d1 Elec0d0];
+Elec0d0 = MotorParam(TermR);                % (Ohms)
+Elec0d1 = MotorParam(TermL) * 1e3;          % (H)
+Elec0d = [Elec0d1, Elec0d0];
 
 % =====================[Torque Const & Back EMF]========================
 % TORQUE CONSTANT
@@ -109,6 +148,9 @@ BackEMF0_inv = MotorParam(SpdK) * RadPSecPerRPM;
 BackEMF0 = 1 / BackEMF0_inv;
 
 % =====================[Mechanical Motor Dynamics]========================
+% Transfer function is given as:
+% TF(S) = ______s______
+%         Js^2 + Bs + K
 
 % =====================[Moment of Inertia Calculations]========================
 % Moment of Inertia (J) is contributed by:
@@ -154,7 +196,7 @@ q1_weight_J      = q1_extended_J - q1_imaginary_J;
 % The moment of inertia from the counter weight
 counter_weight_J = q1_weight_J;
 
-%now find the value of B which is the same as q1
+% now find the value of B which is the same as q1
 B_motor_q0 = MotorParam(SpdTorqueGrad);       % rpm/mNm
 B_motor_q0 = B_motor_q0 * 1e-3;               % rpm/Nm
 B_motor_q0 = B_motor_q0 * RadPSecPerRPM;      % (rad/s)/Nm		
@@ -172,14 +214,15 @@ JntSat0 = Big;
 
 % =====================[Sensor Dynamics]========================
 % TODO: Check work
+
+% Sensor gain maps angle (in radians) to voltages (V)
 Sens0    = 0;
 SensSat0 = SensV;
 
 
 % =====================[Static Friction]========================
-% TODO: Check work
+% TODO: Check work (not quite)
 StFric0 = uSF;
-
 
 % =============================
 % Q1 : Rotation about x-axis (Only carrying the laser)
@@ -187,14 +230,12 @@ StFric0 = uSF;
 
 % =====================[Amplifier Dynamics]========================
 % Since the same amplifier is used on both motors, the transfer function is the same
-
 Amp1n   = Amp0n;
 Amp1d   = Amp0d;
 AmpSat1 = Big;
 
 % =====================[Electrical Motor Dynamics]========================
 % Since the same electric motor is used on both motors, the transfer function is the same
-
 Elec1n = Elec0n;
 Elec1d = Elec0d;
 
@@ -203,33 +244,41 @@ Elec1d = Elec0d;
 TConst1  = TConst0;
 BackEMF1 = BackEMF0;
 
-
 % =====================[Mechanical Motor Dynamics]========================
 % Transfer function is given as:
 % TF(S) = ______s______
 %         Js^2 + Bs + K
 
-% unit of J is kg*m^2
-% unit of B is kg*m^2/s^2
+% unit of J is kgm^2
+% unit of B is kgm^2/s
+% unit of K is kgm^2/s^2
+
 % Get rotor inertia and do unit conversion
-% TODO: FiX
-J_rotor = MotorParam(RotJ); % g/cm^2
-J_rotor = J_rotor * 1e3;    % kg/cm^2
-J_rotor = J_rotor * 1e-4;    % kg/m^2
+J_rotor = MotorParam(RotJ); % gcm^2
+J_rotor = J_rotor * 1e3;    % kgcm^2
+J_rotor = J_rotor * 1e-4;   % kgm^2
 
 % Motor speed torque gradient and do unit conversion
 B_motor = MotorParam(SpdTorqueGrad);    % rpm/mNm
-B_motor = B_motor * 1e-3;               % rpm/Nm
+B_motor = B_motor * 1e3;                % rpm/Nm
 B_motor = B_motor * RadPSecPerRPM;      % (rad/s)/Nm
-B_motor = 1 / B_motor;                  % Nm/(rad/s)
+B_motor = 1 / B_motor;                  % Nm/(rad/s) === kgm^2/s
 
+% Moment of inertia only depends on the rotor
 J_1 = J_rotor;
-B_1 = B_motor;
-K_1 = 0; %friction is negligible once motor starts moving
 
+% Friction
+B_1 = B_motor;
+
+% Inner motor has no spring behavior
+K_1 = 0;
+
+% Q1 mechanical dynamics transfer function
 Mech1n  = [1, 0];
-Mech1d  = [J B K];
-JntSat1 = Big;
+Mech1d  = [J_1, B_1, K_1];
+
+% Maximum the joint can turn
+JntSat1 = JntLim * RadPerDeg;           % (rad)
 
 
 % =====================[Sensor Dynamics]========================
