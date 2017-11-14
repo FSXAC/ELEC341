@@ -27,10 +27,8 @@ link_depth  = LinkD * 1e-3;     % (m)
 link_offset = LinkOff * 1e-3;   % (m)
 
 % Material and spring constant
-alum_density = RhoAl * 1e3;         % (kg/m^3)
-spring_k     = SpringK * 1e-3;      % (Nm/rev)
-spring_k     = spring_k / (2 * pi); % (Nm/rad)
-
+alum_density = RhoAl * 1e3;                     % (kg/m^3)
+spring_k     = SpringK * 1e-3 / (2 * pi);       % (Nm/rad)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Over-write the default values from DEFAULT.m %
@@ -126,7 +124,7 @@ Elec0d  = [Elec0d1, Elec0d0];
 % TORQUE CONSTANT
 % The gain between the output of electric dynamics and input of mechanical dynamics
 % Equation: Torque = K_T    * Current
-% Units:    (Nm)   = (Nm/A) * (A) 
+% Units:    (Nm)   = (Nm/A) * (A)
 TConst0 = motor_param(TorqueK);     % (Nm/A)
 
 % SPEED CONSTANT
@@ -139,15 +137,19 @@ BackEMF0 = 1 / motor_param(SpdK);   % (V/(rad/s))
 % Transfer function is given as:
 % TF(S) = ______s______
 %         Js^2 + Bs + K
+% The unit of J is kgm^2
+% The unit of B is kgm^2/s
+% The unit of K is kgm^2/s^2
 
-% =====================[Moment of Inertia Calculations]========================
+% ======== Moment of Inertia Calculations ========
 % Moment of Inertia (J) is contributed by:
 % - Wrist frame (aluminium)
 % - Rotor
 % - Inner motor (q1)
 % - Counter weight (aluminium) 
 
-% Moment of inertia due to the wrist frame
+% === Moment of inertia due to the wrist frame ===
+% Compute the mass of the 6061 cylindrical shell / ring
 ring_volume = (link_oR^2 - link_iR^2) * pi * link_depth;    % Volume (m^3)
 ring_mass   = ring_volume * alum_density;                   % Mass   (kg)
 
@@ -161,52 +163,67 @@ ring_mass   = ring_volume * alum_density;                   % Mass   (kg)
 % - 'h' is height / length      (m)
 ring_J = (ring_mass / 12) * (3 * (link_iR^2 + link_oR^2) + link_depth^2);
 
-% Moment of inertia from motor's internal rotor
-rotor_J = MotorParam(RotJ) * 1e3 * 1e-4;     %(kgm^2)
+% === Moment of inertia from motor's internal rotor ===
+q0_rotor_J = motor_param(RotJ); % (kgm^2)
 
-motor_length  = MotorParam(Length) * 1e-3;       % (m)
-motor_radius  = MotorParam(OuterDiam) / 2 * 1e-3; % (m)
-motor_weight  = MotorParam(Weight) * 1e-3;       % (kg)
-motor_density = motor_weight / (motor_radius^2 * pi * motor_length);    % (kg/m^3)
+% === Moment of inertia from the inner motor (q1) and the counter weight ===
+% Find the density of the motor by treating it as a cylindrical rod
+motor_length  = motor_param(Length);                % (m)
+motor_radius  = motor_param(OuterDiam) / 2;         % (m)
+motor_volume  = motor_radius^2 * pi * motor_length; % (m^3)
+motor_mass    = motor_param(Weight);                % (kg)
+motor_density = motor_mass / motor_volume;          % (kg/m^3)
 
+% Find the mass of the motor if it were a cylinder that extends to the center
+q1_extended_volume = link_offset * motor_radius^2 * pi;                 % (m^3)
+q1_extended_mass   = motor_mass + (motor_density * q1_extended_volume); % (kg)
 
+% Find the moment due to the motor and the imaginary extension:
 % The moment of inertia for a rod turning on its end is given as:
 % J = (1/3)ml^2
 % Where:
 % - 'J' is moment of inertia    (kgm^2)
 % - 'm' is mass                 (kg)
 % - 'l' is the length of rod    (m)
-q1_extended_mass = motor_weight + (motor_density * link_offset * motor_radius^2 * pi); % (kg)
-q1_extended_J    = q1_extended_mass*(link_offset + motor_length)^2 / 3;    % (kgm^2)
-q1_imaginary_J   = (motor_density * link_offset * (motor_radius)^2 * pi) * link_offset^2 / 3;
-q1_weight_J      = q1_extended_J - q1_imaginary_J;
+% Computing the J from the motor and the imaginary extension
+q1_extended_length = link_offset + motor_length;                        % (m)
+q1_extended_J      = q1_extended_mass * q1_extended_length^2 / 3;       % (kgm^2)
 
-% The moment of inertia from the counter weight
-counter_weight_J = q1_weight_J;
+% Compute the J from just the extension
+q1_imaginary_mass = motor_density * link_offset * motor_radius^2 * pi;  % (kg)
+q1_imaginary_J    = q1_imaginary_mass * link_offset^2 / 3;              % (kgm^2)
 
-% now find the value of B which is the same as q1
-B_motor_q0 = MotorParam(SpdTorqueGrad);       % rpm/mNm
-B_motor_q0 = B_motor_q0 * 1e-3;               % rpm/Nm
-B_motor_q0 = B_motor_q0 * RadPSecPerRPM;      % (rad/s)/Nm		
-B_motor_q0 = 1 / B_motor_q0;                  % Nm/(rad/s)
+% The moment of inertia by the motor is a superposition
+q1_J = q1_extended_J - q1_imaginary_J;                                  % (kgm^2)
+
+% The moment of inertia from the counter weight is the same as motor
+counter_J = q1_J;                                                       % (kgm^2)
+
+% ========= End of Moment of Inertia Calculations ========
+
+% Finding 'B' via speed-torque gradient
+q0_B = 1 / motor_param(SpdTorqueGrad);          % (Nm/(rad/s))
+
+% Spring behavior associated with motor q0
+q0_K = spring_k;                                % (Nm/rad)
 
 % Putting it all together
-J_0 = ring_J + rotor_J + q1_weight_J + counter_weight_J;
-B_0 = B_motor_q0;
-K_0 = 0;
+J_0 = ring_J + q0_rotor_J + q1_J + counter_J;   % (kgm^2)
+B_0 = q0_B;                                     % ((rad/s)/Nm)  === (kgm^2/s)
+K_0 = q0_K;                                     % (Nm/rad)      === (kgm^2/s^2)
 
+% Insert coefficients into transfer function
 Mech0n  = [1, 0];
 Mech0d  = [J_0, B_0, K_0];
-JntSat0 = Big;
 
+% Motor q0 has unlimited joint limit
+JntSat0 = Big;
 
 % =====================[Sensor Dynamics]========================
 % TODO: Check work
-
 % Sensor gain maps angle (in radians) to voltages (V)
 Sens0    = 0;
 SensSat0 = SensV;
-
 
 % =====================[Static Friction]========================
 % TODO: Check work (not quite)
@@ -236,10 +253,9 @@ BackEMF1 = BackEMF0;
 % Transfer function is given as:
 % TF(S) = ______s______
 %         Js^2 + Bs + K
-
-% unit of J is kgm^2
-% unit of B is kgm^2/s
-% unit of K is kgm^2/s^2
+% The unit of J is kgm^2
+% The unit of B is kgm^2/s
+% The unit of K is kgm^2/s^2
 
 % Get rotor inertia and do unit conversion
 J_rotor = MotorParam(RotJ); % gcm^2
