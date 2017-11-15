@@ -42,6 +42,10 @@ Thus, the calculation is straightforward. X position is given by $\tan(q_0)\time
 
 ## Amplifier
 
+Both motors is equipped with the power amplifier (as shown in figure ??). The operational amplifier is set up with the following resistor, capacitor, and inductor values.
+
+
+
 ## Electromechanical Dynamics
 
 ## Mechanical Dynamics

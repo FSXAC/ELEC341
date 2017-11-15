@@ -1,40 +1,60 @@
-# ELEC341 Design Project
-PID Control Project in MATLAB and Simulink
+ELEC 341 Design Project
 
-Refer to the project description [here](https://www.ece.ubc.ca/~leos/pdf/e341/proj/Proj17.pdf)!
+*Muchen He (44838154); Leo Liu (18800152)*
 
-## Introduction
+[TOC]
 
-### Project Description
+# Selective Laser Sintering 3D Printer
 
-### Tasks
+## System Overview
 
-#### Part I
+The Selective Laser Sintering (SLS) 3D printer uses a laser to point at different locations on the build platform to solidify resin and produce solid components. The laser can be pointed using a two-axle system powered by two motors. The laser intensity is adjusted depending on which part we are printing such that all area of the part, during printing, receive uniform laser intensity.
 
-Modify `printer.slx`
+Motor 0 is aligned on the Y axis and rotates the inner assembly (which the inner motor, motor 1, is mounted on) on the XZ plane. 
 
-- [x] Develop models to compute the **direct** and **inverse** kinematics of the wrist
+Motor 1 is aligned on the X axis and rotates the laser on the YZ axis.
 
-<img src="https://raw.githubusercontent.com/FSXAC/ELEC341/master/docs/q0q1.jpg" width="400px">
+## Inverse Kinematics
 
-Modifying `system.m` file
+Initially, the printer is fed with Cartesian coordinates of where the laser should be pointed. Since the laser is controlled rotationally, we need to convert them into desired angles for the two motors to turn.
 
-- [x] Model the OP AMP transfer function
+Hence **inverse kinematics**, which is a function block that has Cartesian coordinates as inputs, and outputs desired angle for the motors.
 
-- [ ] Model the electrical dynamics function
+The input is a vector with three components:
 
-- [ ] Model the mechanical dynamics function
+1. Desired X position
+2. Desired Y position
+3. Desired Z position
+
+To compute the angles for motor 0, it is simply $\tan^{-1}\left(\frac {x}{z'}\right)$ and the angle for motor 1 is $\tan^{-1}\left(\frac{y}{z'}\right)$ where $z'$ is the height from the laser to the part being printed.
+
+## Direct Kinematics
+
+For feedback, we need to know the actual X and Y position of where the laser is pointing, hence the **direct kinematic**. Where the input is the actual angle of the motors, and output is the actual position in Cartesian coordinates.
+
+The input is three components which is:
+
+1. Angle of motor 0
+2. Angle of motor 1
+3. Distance from the laser to the top of part being printed
+
+Thus, the calculation is straightforward. X position is given by $\tan(q_0)\times z'$  and Y position is given by $\tan(q_1)\times z'$.
+
+## Amplifier
+
+Both motors is equipped with the power amplifier (as shown in figure ??). The operational amplifier is set up with the following resistor, capacitor, and inductor values.
 
 
-- The default motor is **Maxon A-Max 22mm 5W** 
 
-- For this part, we might need to refer to the [moment of inertia equations](https://en.wikipedia.org/wiki/List_of_moments_of_inertia) and [motor equations](https://www.ece.ubc.ca/~leos/pdf/e341/handouts/desproj/MaxonSpecs.pdf)
+## Electromechanical Dynamics
 
-#### Part II
+## Mechanical Dynamics
 
-- [ ] Select best motor for each joint
-- [ ] Design a **PID** controller that *minimizes the build time* without exceeding the maximum build error
-- [ ] Modify the time vector to help achieve the desired output
+### Motor 0
 
-### System Description
+### Motor 1
+
+#### Static Friction
+
+## Sensor Dynamics
 
