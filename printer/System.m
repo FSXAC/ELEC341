@@ -235,7 +235,9 @@ JntSat0 = Big;
 % =====================[Sensor Dynamics]========================
 % TODO: Check work
 % Sensor gain maps angle (in radians) to voltages (V)
-Sens0    = 0;
+% Linear relationship between degree and voltage
+% TODO : NEED CONFIRMATION ON SENSOR DYNAMICS
+Sens0    = SensV/SensAng; 
 SensSat0 = SensV;
 
 % =====================[Static Friction]========================
@@ -300,8 +302,8 @@ JntSat1 = joint_limit;
 
 
 % =====================[Sensor Dynamics]========================
-% TODO:
-Sens1    = 0;
+% TODO: NEED CONFIRMATION ON SENSOR DYNAMICS
+Sens1    = SensV/SensAng; 
 SensSat1 = SensV;
 
 
