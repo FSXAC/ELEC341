@@ -131,12 +131,16 @@ Elec0d  = [Elec0d1, Elec0d0];
 % =====================[Torque Const & Back EMF]========================
 % TORQUE CONSTANT
 % The gain between the output of electric dynamics and input of mechanical dynamics
+% Input: current (A)
+% Output: torque (Nm)
 % Equation: Torque = K_T    * Current
 % Units:    (Nm)   = (Nm/A) * (A)
 TConst0 = motor_param(TorqueK);     % (Nm/A)
 
 % SPEED CONSTANT
 % The gain between the output speed and induced back-EMF
+% Input: Speed (rad/s)
+% Output: Voltage (V)
 % Equation: Back EMF = K_V         * Speed
 % Units:    (V)      = (V/(rad/s)) * (rad/s)
 BackEMF0 = 1 / motor_param(SpdK);   % (V/(rad/s))
@@ -151,7 +155,7 @@ BackEMF0 = 1 / motor_param(SpdK);   % (V/(rad/s))
 
 % ======== Moment of Inertia Calculations ========
 % Moment of Inertia (J) is contributed by:
-% - Wrist frame (aluminium)
+% - Wrist frame (aluminium link)
 % - Rotor
 % - Inner motor (q1)
 % - Counter weight (aluminium) 
@@ -168,7 +172,7 @@ ring_mass   = ring_volume * alum_density;                   % Mass   (kg)
 % - 'm' is mass                 (kg)
 % - 'r_1' is inner radius       (m)
 % - 'r_2' is outer radius       (m)
-% - 'h' is height / length      (m)
+% - 'h' is height / length of the cylinderical rod (m)
 ring_J = (ring_mass / 12) * (3 * (link_iR^2 + link_oR^2) + link_depth^2);
 
 % === Moment of inertia from motor's internal rotor ===
