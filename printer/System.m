@@ -229,17 +229,16 @@ Mech0d  = [J_0, B_0, K_0];
 JntSat0 = Big;
 
 % =====================[Sensor Dynamics]========================
-% TODO: Check work
-% Sensor gain maps angle (in radians) to voltages (V)
-Sens0    = 0;
-SensSat0 = SensV;
+% Sensor gain maps angle (in radians) to voltages (V) [-180, 180]->[-5, 5]
+Sens0    = SensV / (SensAng * RadPerDeg);       % (V/rad)
+SensSat0 = SensV;                               % (V)
 
 % =====================[Static Friction]========================
-% TODO: Check work (I don't think it's right)
+% TODO: Check work
 % computing the force of gravity acting on the inner assembly
 inner_mass = 2 * motor_mass + ring_mass;        % (kg)
 inner_fg   = G * inner_mass;                    % (N)
-StFric0    = uSF * inner_fg;                    % (Nm) ?
+StFric0    = uSF * inner_fg;                    % (N)
 
 % =============================
 % Q1 : Rotation about x-axis (Only carrying the laser)
@@ -272,10 +271,10 @@ BackEMF1 = BackEMF0;
 % The unit of K is kgm^2/s^2
 
 % Get rotor inertia and do unit conversion
-q1_rotor_J = motor_param(RotJ);     % (kgm^2)
+q1_rotor_J = motor_param(RotJ);                 % (kgm^2)
 
 % Motor speed torque gradient and do unit conversion
-q1_B = motor_param(SpdTorqueGrad);  % (Nm/(rad/s))
+q1_B = motor_param(SpdTorqueGrad);              % (Nm/(rad/s))
 
 % Putting it all together
 % Moment of inertia only depends on the rotor
@@ -296,14 +295,12 @@ JntSat1 = joint_limit;
 
 
 % =====================[Sensor Dynamics]========================
-% TODO:
-Sens1    = 0;
-SensSat1 = SensV;
-
+Sens1    = SensV / (SensAng * RadPerDeg);       % (V/rad)
+SensSat1 = SensV;                               % (V)
 
 % =====================[Static Friction]========================
-% TODO:
-StFric1 = uSF;
+% I don't think this is used any where so we can leave it 0
+StFric1 = 0;
 
 % ==========================================
 % Transfer Functions
@@ -313,4 +310,10 @@ StFric1 = uSF;
 
 % Amplifier Transfer Function
 tf_amp = tf(Amp0n, Amp0d);
+
+% Electrical Dynamics Transfer Function
 tf_elec = tf(Elec0n, Elec0d);
+
+% Mechanical Dynamics Transfer Functions
+tf_motor0 = tf(Mech0n, Mech0d);
+tf_motor1 = tf(Mech1n, Mech1d);
