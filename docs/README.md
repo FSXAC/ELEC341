@@ -1,6 +1,28 @@
-# ELEC341P1
-PID Control Project in MATLAB and Simulink
+ELEC 341 Design Project
 
-Refer to the project description [here](https://www.ece.ubc.ca/~leos/pdf/e341/proj/Proj17.pdf)!
+*Muchen He (44838154); Leo Liu (18800152)*
 
-Due date: Nov 17 2017
+[TOC]
+
+# Selective Laser Sintering 3D Printer
+
+## System Overview
+
+## Inverse Kinematics
+
+## Direct Kinematics
+
+## Amplifier
+
+## Electromechanical Dynamics
+
+## Mechanical Dynamics
+
+### Motor 0
+
+### Motor 1
+
+#### Static Friction
+
+## Sensor Dynamics
+
