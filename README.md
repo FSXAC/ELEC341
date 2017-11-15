@@ -44,17 +44,32 @@ Thus, the calculation is straightforward. X position is given by $\tan(q_0)\time
 
 Both motors is equipped with the power amplifier (as shown in figure ??). The operational amplifier is set up with the following resistor, capacitor, and inductor values.
 
+`... some calculations and justifications here`
 
+The transfer function for the amplifier is given as
+$$
+\text{TF}(s)=\frac{CR_1R_2-L}{LCR_1s+CR_1R_2}\quad\frac{\text V}{\text V}
+$$
 
 ## Electromechanical Dynamics
+
+### Equivalent Circuit
+
+
 
 ## Mechanical Dynamics
 
 ### Motor 0
 
+#### 
+
 ### Motor 1
 
+#### Moment of Inertia Calculations
+
 #### Static Friction
+
+
 
 ## Sensor Dynamics
 
