@@ -63,7 +63,7 @@ motor_param = ...
     MotorParam(SpdK) * RadPSecPerRPM        % ((rad/s)/V)
     MotorParam(SpdTorqueGrad) * 1e3 * RadPSecPerRPM     % ((rad/s)/Nm)
     MotorParam(MechTimeK) * 1e-3            % (s)
-    MotorParam(RotJ) * 1e-3 * 1e4           % (kgm^2)
+    MotorParam(RotJ) * 1e-3 * 1e-4          % (kgm^2)
 
     MotorParam(ThermRhous)                  % (K/W)
     MotorParam(ThermRwind)                  % (K/W)
