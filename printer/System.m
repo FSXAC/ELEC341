@@ -52,7 +52,7 @@ motor_param = ...
     MotorParam(NoLoadCurr) * 1e-3           % (A)
     MotorParam(NomSpd) * RadPSecPerRPM      % (rad/s)
     MotorParam(NomTorque) * 1e-3            % (Nm)
-    MotorParam(NomCurr) * 1e-3              % (A)
+    MotorParam(NomCurr)                     % (A)
     MotorParam(StallTorque) * 1e-3          % (Nm)
     MotorParam(StallCurr)                   % (A)
     MotorParam(MaxEff)                      % (%)
@@ -63,7 +63,7 @@ motor_param = ...
     MotorParam(SpdK) * RadPSecPerRPM        % ((rad/s)/V)
     MotorParam(SpdTorqueGrad) * 1e3 * RadPSecPerRPM     % ((rad/s)/Nm)
     MotorParam(MechTimeK) * 1e-3            % (s)
-    MotorParam(RotJ) * 1e-3 * 1e-4          % (kgm^2)
+    MotorParam(RotJ) * 1e-3 * 1e4           % (kgm^2)
 
     MotorParam(ThermRhous)                  % (K/W)
     MotorParam(ThermRwind)                  % (K/W)
@@ -100,7 +100,6 @@ motor_param = ...
 % Q0 : Rotation about y-axis
 % =============================
 % =====================[Amplifier Dynamics]========================
-% TODO: Check calculations
 % Transfer function coefficients
 Amp0n0 = (C_ * R2_ * R1_) - L_;
 Amp0d0 = C_ * R1_ * R2_;
@@ -238,7 +237,6 @@ Sens0    = SensV / (SensAng * RadPerDeg);       % (V/rad)
 SensSat0 = SensV;                               % (V)
 
 % =====================[Static Friction]========================
-% TODO: Check work
 % computing the force of gravity acting on the inner assembly
 inner_mass = 2 * motor_mass + ring_mass;        % (kg)
 inner_fg   = G * inner_mass;                    % (N)
@@ -278,7 +276,8 @@ BackEMF1 = BackEMF0;
 q1_rotor_J = motor_param(RotJ);                 % (kgm^2)
 
 % Motor speed torque gradient and do unit conversion
-q1_B = motor_param(SpdTorqueGrad);              % (Nm/(rad/s))
+q1_B = 1 / motor_param(SpdTorqueGrad);          % (Nm/(rad/s))
+                                                % (kgm^2/s)
 
 % Putting it all together
 % Moment of inertia only depends on the rotor
@@ -291,6 +290,7 @@ B_1 = q1_B;
 K_1 = 0;
 
 % Q1 mechanical dynamics transfer function
+% FIXME: This causes the simulation to fail due to divided by 0
 Mech1n  = [1, 0];
 Mech1d  = [J_1, B_1, K_1];
 
