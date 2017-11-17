@@ -213,6 +213,7 @@ counter_J = q1_J;                                                       % (kgm^2
 % ========= End of Moment of Inertia Calculations ========
 
 % Finding 'B' via speed-torque gradient
+% FIXME: Use the formula from no-load current, etc.
 q0_B = 1 / motor_param(SpdTorqueGrad);          % (Nm/(rad/s))
 
 % Spring behavior associated with motor q0
@@ -276,6 +277,7 @@ BackEMF1 = BackEMF0;
 q1_rotor_J = motor_param(RotJ);                 % (kgm^2)
 
 % Motor speed torque gradient and do unit conversion
+% FIXME: Use the formula from no-load current, etc.
 q1_B = 1 / motor_param(SpdTorqueGrad);          % (Nm/(rad/s))
                                                 % (kgm^2/s)
 
@@ -290,7 +292,6 @@ B_1 = q1_B;
 K_1 = 0;
 
 % Q1 mechanical dynamics transfer function
-% FIXME: This causes the simulation to fail due to divided by 0
 Mech1n  = [1, 0];
 Mech1d  = [J_1, B_1, K_1];
 
