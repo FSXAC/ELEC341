@@ -7,8 +7,8 @@
 % Enter optimized PID values here.
 % No more than 3 significant figures per gain value.
 
-%PID0 = [1 0 0];
-%PID1 = [1 0 0];
+PID0 = [1 0 0];
+PID1 = [1 0 0];
 
 % Enter feedback sensor values here.
 
