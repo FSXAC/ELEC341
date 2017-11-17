@@ -122,8 +122,8 @@ AmpSat0 = Big;
 % TF= ______Elec0d0______ = ___1_______________
 %      Elec0d1*s + Elec0d0    TermL*s + TermR
 
-Elec0d0 = motor_param(TermR);                % (Ohms)
-Elec0d1 = motor_param(TermL) * 1e3;          % (H)
+Elec0d0 = motor_param(TermR);               % (Ohms)
+Elec0d1 = motor_param(TermL);               % (H)
 Elec0n  = 1;
 Elec0d  = [Elec0d1, Elec0d0];
 
