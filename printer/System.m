@@ -122,8 +122,8 @@ AmpSat0 = Big;
 % TF= ______Elec0d0______ = ___1_______________
 %      Elec0d1*s + Elec0d0    TermL*s + TermR
 
-Elec0d0 = motor_param(TermR);                % (Ohms)
-Elec0d1 = motor_param(TermL) * 1e3;          % (H)
+Elec0d0 = motor_param(TermR);               % (Ohms)
+Elec0d1 = motor_param(TermL);               % (H)
 Elec0n  = 1;
 Elec0d  = [Elec0d1, Elec0d0];
 
@@ -213,7 +213,9 @@ counter_J = q1_J;                                                       % (kgm^2
 % ========= End of Moment of Inertia Calculations ========
 
 % Finding 'B' via speed-torque gradient
-q0_B = 1 / motor_param(SpdTorqueGrad);          % (Nm/(rad/s))
+% The damping constant B is given by (no load current * torque constant) / (no load speed)
+q0_B = motor_param(NoLoadCurr) * motor_param(TorqueK) / motor_param(NoLoadSpd);
+% q0_B = 1 / motor_param(SpdTorqueGrad);          % (Nm/(rad/s))
 
 % Spring behavior associated with motor q0
 q0_K = spring_k;                                % (Nm/rad)
@@ -240,7 +242,7 @@ SensSat0 = SensV;                               % (V)
 % computing the force of gravity acting on the inner assembly
 inner_mass = 2 * motor_mass + ring_mass;        % (kg)
 inner_fg   = G * inner_mass;                    % (N)
-StFric0    = uSF * inner_fg;                    % (N)
+StFric0    = mu_SF * inner_fg;                  % (N)
 
 % =============================
 % Q1 : Rotation about x-axis (Only carrying the laser)
@@ -276,7 +278,8 @@ BackEMF1 = BackEMF0;
 q1_rotor_J = motor_param(RotJ);                 % (kgm^2)
 
 % Motor speed torque gradient and do unit conversion
-q1_B = 1 / motor_param(SpdTorqueGrad);          % (Nm/(rad/s))
+q1_B = motor_param(NoLoadCurr) * motor_param(TorqueK) / motor_param(NoLoadSpd);
+% q1_B = 1 / motor_param(SpdTorqueGrad);          % (Nm/(rad/s))
                                                 % (kgm^2/s)
 
 % Putting it all together
@@ -290,7 +293,6 @@ B_1 = q1_B;
 K_1 = 0;
 
 % Q1 mechanical dynamics transfer function
-% FIXME: This causes the simulation to fail due to divided by 0
 Mech1n  = [1, 0];
 Mech1d  = [J_1, B_1, K_1];
 
