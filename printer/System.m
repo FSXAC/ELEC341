@@ -34,7 +34,7 @@ spring_k     = SpringK * 1e-3 / (2 * pi);       % (Nm/rad)
 mu_SF = uSF * 1e-6;             % (m)
 
 % Joint limit
-joint_limit = JntLim * DegPerRad;               % (rad)
+joint_limit = JntLim * RadPerDeg;               % (rad)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Over-write the default values from DEFAULT.m %
