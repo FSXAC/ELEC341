@@ -112,8 +112,8 @@ Amp0d1 = L_ * C_ * R1_;
 Amp0n   = Amp0n0;
 Amp0d   = [Amp0d1 Amp0d0];
 
-% TODO: amplifier saturation voltagae
-AmpSat0 = Big;
+% Saturation voltage such that 
+AmpSat0 = motor_param(NomV);
 
 % =====================[Electrical Motor Dynamics]========================
 % This specifies the transfer function for the electric motor
