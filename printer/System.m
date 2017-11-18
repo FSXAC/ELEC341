@@ -252,8 +252,7 @@ StFric0    = mu_SF * inner_fg;                  % (N)
 Amp1n   = Amp0n;
 Amp1d   = Amp0d;
 
-% TODO: amplifier saturation voltagae
-AmpSat1 = Big;
+AmpSat1 = AmpSat0;
 
 % =====================[Electrical Motor Dynamics]========================
 % Since the same electric motor is used on both motors, the transfer function is the same
