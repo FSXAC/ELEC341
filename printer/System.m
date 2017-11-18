@@ -185,10 +185,9 @@ motor_volume  = motor_radius^2 * pi * motor_length; % (m^3)
 motor_mass    = motor_param(Weight);                % (kg)
 motor_density = motor_mass / motor_volume;          % (kg/m^3)
 
-% Find the length and mass of the extended rod(including the imaginary part in the link)
+% Find the length and mass of the extended rod (including the imaginary part in the link)
 q1_extended_length = link_offset * 2 + motor_length * 2 ;     % (m^3)
-q1_extended_mass   = q1_extended_length * motor_density * pi * motor_radius ^ 2 ; % (kg)
-
+q1_extended_mass   = q1_extended_length * motor_density * pi * motor_radius ^ 2; % (kg)
 
 % Find the moment due to the extended rod(including the imaginary parts):
 % The moment of inertia for a rod turning on its end is given as:
@@ -198,12 +197,12 @@ q1_extended_mass   = q1_extended_length * motor_density * pi * motor_radius ^ 2 
 % - 'm' is mass                 (kg)
 % - 'h' is the length of rod    (m)
 % - 'r' is the radius of the rod
-% Computing the J from the motor and the imaginary extension                    
-q1_extended_J      = 1/12 * q1_extended_mass * (3 * motor_radius ^ 2 + q1_extended_length ^ 2);       % (kgm^2)
+% Computing the J from the motor and the imaginary extension
+q1_extended_J = 1/12 * q1_extended_mass * (3 * motor_radius ^ 2 + q1_extended_length ^ 2);       % (kgm^2)
 
 % Compute the J from just the imaginary part
-q1_imaginary_Length= 2 * link_offset
-q1_imaginary_mass = motor_density * q1_imaginary_Length * motor_radius^2 * pi;  % (kg)
+q1_imaginary_Length = 2 * link_offset;          % (m)
+q1_imaginary_mass   = motor_density * q1_imaginary_Length * motor_radius^2 * pi;  % (kg)
 q1_imaginary_J      = 1/12 * q1_imaginary_mass * (3 * motor_radius ^ 2 + q1_imaginary_Length ^ 2);       % (kgm^2)
 
 % The moment of inertia by the motor is a superposition
@@ -229,7 +228,6 @@ Mech0n  = [1, 0];
 Mech0d  = [J_0, B_0, K_0];
 
 % Motor q0 has unlimited joint limit
-% TODO: Check
 JntSat0 = Big;
 
 % =====================[Sensor Dynamics]========================
@@ -251,7 +249,6 @@ StFric0    = mu_SF * inner_fg;                  % (N)
 % Since the same amplifier is used on both motors, the transfer function is the same
 Amp1n   = Amp0n;
 Amp1d   = Amp0d;
-
 AmpSat1 = AmpSat0;
 
 % =====================[Electrical Motor Dynamics]========================
