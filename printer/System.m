@@ -185,30 +185,29 @@ motor_volume  = motor_radius^2 * pi * motor_length; % (m^3)
 motor_mass    = motor_param(Weight);                % (kg)
 motor_density = motor_mass / motor_volume;          % (kg/m^3)
 
-% Find the mass of the motor if it were a cylinder that extends to the center
-q1_extended_volume = link_offset * motor_radius^2 * pi;                 % (m^3)
-q1_extended_mass   = motor_mass + (motor_density * q1_extended_volume); % (kg)
+% Find the length and mass of the extended rod(including the imaginary part in the link)
+q1_extended_length = link_offset * 2 + motor_length * 2 ;     % (m^3)
+q1_extended_mass   = q1_extended_length * motor_density * pi * motor_radius ^ 2 ; % (kg)
 
-% Find the moment due to the motor and the imaginary extension:
+
+% Find the moment due to the extended rod(including the imaginary parts):
 % The moment of inertia for a rod turning on its end is given as:
-% J = (1/3)ml^2
+% J = (1/12)m(3r^2+h^2)
 % Where:
 % - 'J' is moment of inertia    (kgm^2)
 % - 'm' is mass                 (kg)
-% - 'l' is the length of rod    (m)
-% Computing the J from the motor and the imaginary extension
-q1_extended_length = link_offset + motor_length;                        % (m)
-q1_extended_J      = q1_extended_mass * q1_extended_length^2 / 3;       % (kgm^2)
+% - 'h' is the length of rod    (m)
+% - 'r' is the radius of the rod
+% Computing the J from the motor and the imaginary extension                    
+q1_extended_J      = 1/12 * q1_extended_mass * (3 * motor_radius ^ 2 + q1_extended_length ^ 2);       % (kgm^2)
 
-% Compute the J from just the extension
-q1_imaginary_mass = motor_density * link_offset * motor_radius^2 * pi;  % (kg)
-q1_imaginary_J    = q1_imaginary_mass * link_offset^2 / 3;              % (kgm^2)
+% Compute the J from just the imaginary part
+q1_imaginary_Length= 2 * link_offset
+q1_imaginary_mass = motor_density * q1_imaginary_Length * motor_radius^2 * pi;  % (kg)
+q1_imaginary_J      = 1/12 * q1_imaginary_mass * (3 * motor_radius ^ 2 + q1_imaginary_Length ^ 2);       % (kgm^2)
 
 % The moment of inertia by the motor is a superposition
 q1_J = q1_extended_J - q1_imaginary_J;                                  % (kgm^2)
-
-% The moment of inertia from the counter weight is the same as motor
-counter_J = q1_J;                                                       % (kgm^2)
 
 % ========= End of Moment of Inertia Calculations ========
 
@@ -221,7 +220,7 @@ q0_B = motor_param(NoLoadCurr) * motor_param(TorqueK) / motor_param(NoLoadSpd);
 q0_K = spring_k;                                % (Nm/rad)
 
 % Putting it all together
-J_0 = ring_J + q0_rotor_J + q1_J + counter_J;   % (kgm^2)
+J_0 = ring_J + q0_rotor_J + q1_J ;   % (kgm^2)
 B_0 = q0_B;                                     % ((rad/s)/Nm)  === (kgm^2/s)
 K_0 = q0_K;                                     % (Nm/rad)      === (kgm^2/s^2)
 
