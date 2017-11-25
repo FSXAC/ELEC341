@@ -45,56 +45,50 @@ joint_limit = JntLim * RadPerDeg;               % (rad)
 
 
 % =====================[Motor Parameter Unit Conversion]========================
-motor_param = ...
+motor_param_unit_convert = ...
 [
-    MotorParam(NomV)                        % (V)
-    MotorParam(NoLoadSpd) * RadPSecPerRPM   % (rad/s)
-    MotorParam(NoLoadCurr) * 1e-3           % (A)
-    MotorParam(NomSpd) * RadPSecPerRPM      % (rad/s)
-    MotorParam(NomTorque) * 1e-3            % (Nm)
-    MotorParam(NomCurr)                     % (A)
-    MotorParam(StallTorque) * 1e-3          % (Nm)
-    MotorParam(StallCurr)                   % (A)
-    MotorParam(MaxEff)                      % (%)
-
-    MotorParam(TermR)                       % (Ohms)
-    MotorParam(TermL) * 1e-3                % (H)
-    MotorParam(TorqueK) * 1e-3              % (Nm/A)
-    MotorParam(SpdK) * RadPSecPerRPM        % ((rad/s)/V)
-    MotorParam(SpdTorqueGrad) * 1e3 * RadPSecPerRPM     % ((rad/s)/Nm)
-    MotorParam(MechTimeK) * 1e-3            % (s)
-    MotorParam(RotJ) * 1e-3 * 1e-4          % (kgm^2)
-
-    MotorParam(ThermRhous)                  % (K/W)
-    MotorParam(ThermRwind)                  % (K/W)
-    MotorParam(ThermTCwind)                 % (s)
-    MotorParam(ThermTCmot)                  % (s)
-    MotorParam(AmbTemp)                     % (degC)
-    MotorParam(MaxTemp)                     % (degC)
-
-    MotorParam(MaxSpdBall) * RadPSecPerRPM  % (rad/s)
-    MotorParam(AxialPlayBall) * 1e-3        % (m)
-    MotorParam(RadPlayBall) * 1e-3          % (m)
-    MotorParam(MaxAxLdBall)                 % (N)
-    MotorParam(MaxFBall)                    % (N)
-    MotorParam(MaxRadLdBall)                % (N)
-
-    MotorParam(NoPolePair)                  % ()
-    MotorParam(NoCommSeg)                   % ()
-    MotorParam(Weight) * 1e-3               % (kg)
-
-    MotorParam(OuterDiam) * 1e-3            % (m)
-    MotorParam(Length) * 1e-3               % (m)
+    1                           % (V)
+    1 * RadPSecPerRPM           % (rad/s)
+    1 * 1e-3                    % (A)
+    1 * RadPSecPerRPM           % (rad/s)
+    1 * 1e-3                    % (Nm)
+    1                           % (A)
+    1 * 1e-3                    % (Nm)
+    1                           % (A)
+    1                           % (%)
+    1                           % (Ohms)
+    1 * 1e-3                    % (H)
+    1 * 1e-3                    % (Nm/A)
+    1 * RadPSecPerRPM           % ((rad/s)/V)
+    1 * 1e3 * RadPSecPerRPM     % ((rad/s)/Nm)
+    1 * 1e-3                    % (s)
+    1 * 1e-3 * 1e-4             % (kgm^2)
+    1                           % (K/W)
+    1                           % (K/W)
+    1                           % (s)
+    1                           % (s)
+    1                           % (degC)
+    1                           % (degC)
+    1 * RadPSecPerRPM           % (rad/s)
+    1 * 1e-3                    % (m)
+    1 * 1e-3                    % (m)
+    1                           % (N)
+    1                           % (N)
+    1                           % (N)
+    1                           % ()
+    1                           % ()
+    1 * 1e-3                    % (kg)
+    1 * 1e-3                    % (m)
+    1 * 1e-3                    % (m)
 ];
 
 
 % ==========================
 % Motor Parameters
 % ==========================
-% Maximum Current
-% ---------------
-
-
+AMAX22_5W_SB;
+q0 = MotorParam .* motor_param_unit_convert;
+q1 = MotorParam .* motor_param_unit_convert;
 
 % =============================
 % Q0 : Rotation about y-axis
@@ -108,12 +102,11 @@ Amp0d1 = L_ * C_ * R1_;
 % Transfer Function Recomputation
 % TF= ______Amp0n0______ = ___C_ * R1_ * R2____
 %      Amp0d1*s + Amp0d0   L_ * C_ * R1_*s + C_ * R1_ * R2_
-
-Amp0n   = Amp0n0;
-Amp0d   = [Amp0d1 Amp0d0];
+Amp0n = Amp0n0;
+Amp0d = [Amp0d1 Amp0d0];
 
 % Saturation voltage such that 
-AmpSat0 = motor_param(NomV);
+AmpSat0 = q0(NomV);
 
 % =====================[Electrical Motor Dynamics]========================
 % This specifies the transfer function for the electric motor
@@ -122,8 +115,8 @@ AmpSat0 = motor_param(NomV);
 % TF= ______Elec0d0______ = ___1_______________
 %      Elec0d1*s + Elec0d0    TermL*s + TermR
 
-Elec0d0 = motor_param(TermR);               % (Ohms)
-Elec0d1 = motor_param(TermL);               % (H)
+Elec0d0 = q0(TermR);                % (Ohms)
+Elec0d1 = q0(TermL);                % (H)
 Elec0n  = 1;
 Elec0d  = [Elec0d1, Elec0d0];
 
@@ -134,7 +127,7 @@ Elec0d  = [Elec0d1, Elec0d0];
 % Output: torque (Nm)
 % Equation: Torque = K_T    * Current
 % Units:    (Nm)   = (Nm/A) * (A)
-TConst0 = motor_param(TorqueK);     % (Nm/A)
+TConst0 = q0(TorqueK);              % (Nm/A)
 
 % SPEED CONSTANT
 % The gain between the output speed and induced back-EMF
@@ -142,7 +135,7 @@ TConst0 = motor_param(TorqueK);     % (Nm/A)
 % Output: Voltage (V)
 % Equation: Back EMF = K_V         * Speed
 % Units:    (V)      = (V/(rad/s)) * (rad/s)
-BackEMF0 = 1 / motor_param(SpdK);   % (V/(rad/s))
+BackEMF0 = 1 / q0(SpdK);            % (V/(rad/s))
 
 % =====================[Mechanical Motor Dynamics]========================
 % Transfer function is given as:
@@ -175,14 +168,14 @@ ring_mass   = ring_volume * alum_density;                   % Mass   (kg)
 ring_J = (ring_mass / 12) * (3 * (link_iR^2 + link_oR^2) + link_depth^2);
 
 % === Moment of inertia from motor's internal rotor ===
-q0_rotor_J = motor_param(RotJ); % (kgm^2)
+q0_rotor_J = q0(RotJ);          % (kgm^2)
 
 % === Moment of inertia from the inner motor (q1) and the counter weight ===
 % Find the density of the motor by treating it as a cylindrical rod
-motor_length  = motor_param(Length);                % (m)
-motor_radius  = motor_param(OuterDiam) / 2;         % (m)
+motor_length  = q1(Length);                         % (m)
+motor_radius  = q1(OuterDiam) / 2;                  % (m)
 motor_volume  = motor_radius^2 * pi * motor_length; % (m^3)
-motor_mass    = motor_param(Weight);                % (kg)
+motor_mass    = q1(Weight);                         % (kg)
 motor_density = motor_mass / motor_volume;          % (kg/m^3)
 
 % Find the length and mass of the extended rod (including the imaginary part in the link)
@@ -212,7 +205,7 @@ q1_J = q1_extended_J - q1_imaginary_J;                                  % (kgm^2
 
 % Finding 'B' via speed-torque gradient
 % The damping constant B is given by (no load current * torque constant) / (no load speed)
-q0_B = motor_param(NoLoadCurr) * motor_param(TorqueK) / motor_param(NoLoadSpd);
+q0_B = q0(NoLoadCurr) * q0(TorqueK) / q0(NoLoadSpd);
 % q0_B = 1 / motor_param(SpdTorqueGrad);          % (Nm/(rad/s))
 
 % Spring behavior associated with motor q0
@@ -270,10 +263,10 @@ BackEMF1 = BackEMF0;
 % The unit of K is kgm^2/s^2
 
 % Get rotor inertia and do unit conversion
-q1_rotor_J = motor_param(RotJ);                 % (kgm^2)
+q1_rotor_J = q1(RotJ);                 % (kgm^2)
 
 % Motor speed torque gradient and do unit conversion
-q1_B = motor_param(NoLoadCurr) * motor_param(TorqueK) / motor_param(NoLoadSpd);
+q1_B = q1(NoLoadCurr) * q1(TorqueK) / q1(NoLoadSpd);
 % q1_B = 1 / motor_param(SpdTorqueGrad);          % (Nm/(rad/s))
                                                 % (kgm^2/s)
 
