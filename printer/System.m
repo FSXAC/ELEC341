@@ -88,6 +88,7 @@ motor_param_unit_convert = ...
 % ==========================
 AMAX22_5W_SB;
 q0 = MotorParam .* motor_param_unit_convert;
+AMAX22_6W_SB;
 q1 = MotorParam .* motor_param_unit_convert;
 
 % =============================
@@ -114,7 +115,6 @@ AmpSat0 = q0(NomV);
 % OUTPUT: current (A)
 % TF= ______Elec0d0______ = ___1_______________
 %      Elec0d1*s + Elec0d0    TermL*s + TermR
-
 Elec0d0 = q0(TermR);                % (Ohms)
 Elec0d1 = q0(TermL);                % (H)
 Elec0n  = 1;
@@ -246,13 +246,16 @@ AmpSat1 = AmpSat0;
 
 % =====================[Electrical Motor Dynamics]========================
 % Since the same electric motor is used on both motors, the transfer function is the same
-Elec1n = Elec0n;
-Elec1d = Elec0d;
+Elec1d0 = q1(TermR);                            % (Ohms)
+Elec1d1 = q1(TermL);                            % (H)
+Elec1n  = 1;
+Elec1d  = [Elec1d1, Elec1d0];
 
 % =====================[Torque Const & Back EMF]========================
 % NOTE: Current using identical values from q0 motor
-TConst1  = TConst0;
-BackEMF1 = BackEMF0;
+TConst1 = q1(TorqueK);                          % (Nm/A)
+
+BackEMF1 = 1 / q1(SpdK);                        % (V/(rad/s))
 
 % =====================[Mechanical Motor Dynamics]========================
 % Transfer function is given as:
@@ -303,10 +306,12 @@ StFric1 = 0;
 % You may prefer to put this section in a separate .m file
 
 % Amplifier Transfer Function
-tf_amp = tf(Amp0n, Amp0d);
+tf_amp0 = tf(Amp0n, Amp0d);
+tf_amp1 = tf(Amp1n, Amp1d);
 
 % Electrical Dynamics Transfer Function
-tf_elec = tf(Elec0n, Elec0d);
+tf_elec0 = tf(Elec0n, Elec0d);
+tf_elec1 = tf(Elec1n, Elec1d);
 
 % Mechanical Dynamics Transfer Functions
 tf_motor0 = tf(Mech0n, Mech0d);
