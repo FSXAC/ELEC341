@@ -215,6 +215,10 @@ counter_J = q1_J;
 q0_B = q0(NoLoadCurr) * q0(TorqueK) / q0(NoLoadSpd);
 % q0_B = 1 / motor_param(SpdTorqueGrad);          % (Nm/(rad/s))
 
+% Since there's a bearing that also has fiction with the same factor
+% essentially the friction is doubled
+q0_B = 2 * q0_B;                                % (Nm/(rad/s))
+
 % Spring behavior associated with motor q0
 q0_K = spring_k;                                % (Nm/rad)
 
