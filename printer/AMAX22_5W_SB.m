@@ -34,7 +34,7 @@ MotorParam = ...
  85             % MaxTemp       (degC)
 ...
 ...             % Mechanical Data
- 9800           % MaxSpd        (rpm)
+16000           % MaxSpd        (rpm)
  0.1            % AxialPlay     (mm)
  0.012          % RadPlay       (mm)
  1              % MaxAxLd       (N)

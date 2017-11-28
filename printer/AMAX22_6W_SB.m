@@ -11,7 +11,7 @@ MotorParam = ...
  45.8           % NoLoadCurr    (mA)
  7060           % NomSpd        (rpm)
  6.96           % NomTorque     (mNm)
- 0.681          % NomCurr       (mA)
+ 0.681          % NomCurr       (A)
  23.7           % StallTorque   (mNm)
  2.17           % StallCurr     (A)
  72             % MaxEff        (%)
