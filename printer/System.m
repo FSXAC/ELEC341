@@ -344,5 +344,20 @@ tf_elec0 = tf(Elec0n, Elec0d);
 tf_elec1 = tf(Elec1n, Elec1d);
 
 % Mechanical Dynamics Transfer Functions
-tf_motor0 = tf(Mech0n, Mech0d);
-tf_motor1 = tf(Mech1n, Mech1d);
+tf_mech0 = tf(Mech0n, Mech0d);
+tf_mech1 = tf(Mech1n, Mech1d);
+
+% ==========================================
+% Open loop transfer function of everything
+% ==========================================
+% The open loop transfer function maps voltage to radians
+
+% Motor 0
+g_q0 = tf_elec0 * TConst0 * tf_mech0;
+h_q0 = BackEMF0;
+oltf_q0 = tf_amp0 * (g_q0 / (1 + g_q0 * h_q0)) / tf('s');
+
+% Motor 1
+g_q1 = tf_elec1 * TConst1 * tf_mech1;
+h_q1 = BackEMF1;
+oltf_q1 = tf_amp1 * (g_q1 / (1 + g_q1 * h_q1)) / tf('s');
