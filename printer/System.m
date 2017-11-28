@@ -350,12 +350,12 @@ tf_mech1 = tf(Mech1n, Mech1d);
 % ==========================================
 % Open loop transfer function of everything
 % ==========================================
-% The open loop transfer function maps voltage to radians
+% The open loop transfer function maps voltage to radians/s
 
 % Motor 0
 g_q0 = tf_elec0 * TConst0 * tf_mech0;
 h_q0 = BackEMF0;
-oltf_q0 = tf_amp0 * (g_q0 / (1 + g_q0 * h_q0)) / tf('s');
+oltf_q0 = tf_amp0 * (g_q0 / (1 + g_q0 * h_q0)) / tf('s') * Sens0; 
 
 % Simplified
 ol_q0 = zpk(minreal(oltf_q0));
@@ -363,10 +363,35 @@ ol_q0 = zpk(minreal(oltf_q0));
 % Motor 1
 g_q1 = tf_elec1 * TConst1 * tf_mech1;
 h_q1 = BackEMF1;
-oltf_q1 = tf_amp1 * (g_q1 / (1 + g_q1 * h_q1)) / tf('s');
 
 % Simplified
 ol_q1 = zpk(minreal(oltf_q1));
+oltf_q1 = tf_amp1 * (g_q1 / (1 + g_q1 * h_q1)) / tf('s') * Sens1;
+
+% ==========================================
+% Close loop transfer function of everything (might be useful in finding overall step/impulse response)
+% ==========================================
+
+% Motor 0
+% Kp0=PID0(1)
+% Ki0=PID0(2)
+% Kd0=PID0(3)
+% PID0_tf=tf([Kd0 Kp0 Ki0],[1, 0])
+% g_cl_q0 = PID0_tf* tf_amp0 * (g_q0 / (1 + g_q0 * h_q0)) / tf('s')
+% h_cl_q0 = Sens0
+% cltf_q0 = g_cl_q0 / (1 + g_cl_q0 * h_cl_q0)
+
+% % Motor 1
+% Kp1=PID1(1)
+% Ki1=PID1(2)
+% Kd1=PID1(3)
+% PID1_tf=tf([Kd1 Kp1 Ki1],[1, 0])
+% g_cl_q1 = PID1_tf* tf_amp1 * (g_q1 / (1 + g_q1 * h_q1)) / tf('s')
+% h_cl_q1 = Sens1
+% cltf_q1 = g_cl_q1 / (1 + g_cl_q1 * h_cl_q1)
+
+%some useful commands 
+%[k,poles] = rlocfind(sys)
 
 % =====================[PID testing]========================
 % Q0
