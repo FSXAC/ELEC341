@@ -357,7 +357,32 @@ g_q0 = tf_elec0 * TConst0 * tf_mech0;
 h_q0 = BackEMF0;
 oltf_q0 = tf_amp0 * (g_q0 / (1 + g_q0 * h_q0)) / tf('s');
 
+% Simplified
+ol_q0 = zpk(minreal(oltf_q0));
+
 % Motor 1
 g_q1 = tf_elec1 * TConst1 * tf_mech1;
 h_q1 = BackEMF1;
 oltf_q1 = tf_amp1 * (g_q1 / (1 + g_q1 * h_q1)) / tf('s');
+
+% Simplified
+ol_q1 = zpk(minreal(oltf_q1));
+
+% =====================[PID testing]========================
+% Q0
+zeroes_q0 = [1, 0.2838, 14.11];
+ol_pid_q0 = ol_q0 * tf(zeroes_q0, [1, 0]);
+KU_q0 = margin(ol_pid_q0);
+Kd_q0 = KU_q0 / 2;
+Kp_q0 = Kd_q0 * zeroes_q0(2);
+Ki_q0 = Kd_q0 * zeroes_q0(3);
+PID_q0 = [Kd_q0, Kp_q0, Ki_q0];
+
+% Q1
+zeroes_q1 = [1, 49.17, 0];
+ol_pid_q1 = ol_q1 * tf(zeroes_q0, [1, 0]);
+KU_q1 = margin(ol_pid_q1);
+Kd_q1 = KU_q1 / 2;
+Kp_q1 = Kd_q1 * zeroes_q1(2);
+Ki_q1 = Kp_q1 * zeroes_q1(3);
+PID_q1 = [Kd_q1, Kp_q1, Ki_q1];

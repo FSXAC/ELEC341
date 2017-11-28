@@ -6,15 +6,14 @@
 
 % Enter optimized PID values here.
 % No more than 3 significant figures per gain value.
-
 PID0 = [1 0 0];
 PID1 = [1 0 0];
 
 % Enter feedback sensor values here.
-
-%FB0 = 1;
-%FB1 = 1;
-
+% The feedback gain maps voltage (V) from [-5, 5] to angles (rad) [-pi, pi]
+% The gain has the units (rad/V)
+FB0 = (SensAng * RadPerDeg) / SensV;    % rad
+FB1 = FB0;
 
 % =====================
 % Set-Point Time Vector
