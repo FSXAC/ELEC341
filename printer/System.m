@@ -87,7 +87,8 @@ motor_param_unit_convert = ...
 % ==========================
 % Motor Parameters
 % ==========================
-AMAX22_5W_SB;
+% AMAX22_5W_SB;
+AMAX22_6W_SB;
 q0 = MotorParam .* motor_param_unit_convert;
 % AMAX22_6W_SB;
 AMAX12_p75W_SB;
