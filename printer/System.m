@@ -88,11 +88,11 @@ motor_param_unit_convert = ...
 % Motor Parameters
 % ==========================
 % AMAX22_5W_SB;
-AMAX22_6W_SB;
-q0 = MotorParam .* motor_param_unit_convert;
 % AMAX22_6W_SB;
-AMAX12_p75W_SB;
-q1 = MotorParam .* motor_param_unit_convert;
+% q0 = MotorParam .* motor_param_unit_convert;
+% AMAX22_6W_SB;
+% AMAX12_p75W_SB;
+% q1 = MotorParam .* motor_param_unit_convert;
 
 % =============================
 % Q0 : Rotation about y-axis
@@ -242,7 +242,7 @@ q0_B = 2 * q0_B;                                % (Nm/(rad/s))
 q0_K = spring_k;                                % (Nm/rad)
 
 % Putting it all together
-J_0 = ring_J + q0_rotor_J + q1_J;   % (kgm^2)
+J_0 = ring_J + q0_rotor_J + q1_J;               % (kgm^2)
 B_0 = q0_B;                                     % ((rad/s)/Nm)  === (kgm^2/s)
 K_0 = q0_K;                                     % (Nm/rad)      === (kgm^2/s^2)
 

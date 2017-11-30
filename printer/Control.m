@@ -127,9 +127,9 @@ cltf_q0 = g_cl_q0 / (1 + g_cl_q0);
 PID1_tf = tf([1, (PID1(1) / PID1(3)), (PID1(2) / PID1(3))], [1, 0]);
 g_cl_q1 = PID1_tf * ol_q1;
 cltf_q1 = g_cl_q1 / (1 + g_cl_q1);
-step(cltf_q1);
-hold on;
-disp(stepinfo(cltf_q1));
+% step(cltf_q1);
+% hold on;
+% disp(stepinfo(cltf_q1));
 
 %some useful commands 
 %[k,poles] = rlocfind(sys)
