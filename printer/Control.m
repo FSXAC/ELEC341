@@ -103,6 +103,24 @@ Kp_q0 = Kd_q0 * zeroes_q0(2);
 Ki_q0 = Kd_q0 * zeroes_q0(3);
 startPID_q0 = [Kp_q0, Ki_q0, Kd_q0];
 PID0 = startPID_q0;
+PID0 = [0.1464 6.2707 0.0648];  % -risetime
+PID0 = [0.1664 6.2707 0.0648];  % -risetime
+PID0 = [0.166 6.47 0.0648];  % -risetime
+PID0 = [0.166 6.47 0.0660];  % -overshoot -settletime
+PID0 = [0.166 6.47 0.0780];  % -overshoot -settletime
+PID0 = [0.166 7.47 0.0780];  % -risetime -overshoot
+PID0 = [0.166 7.47 0.0880];  % -overshoot -settletime
+PID0 = [0.166 7.47 0.0940];  % -overshoot -settletime
+PID0 = [0.166 8.47 0.0940];  % -risetime -overshoot
+% PID0 = [0.175 8.47 0.0940];  % -risetime
+% PID0 = [0.166 9.47 0.106];  % -overshoot -settletime
+% PID0 = [0.166 10.47 0.126];  % -overshoot -settletime
+% PID0 = [0.156 10.47 0.126];  % -overshoot -settletime
+% PID0 = [0.156 13.47 0.156];  % -overshoot -settletime
+% PID0 = [0.145 13.47 0.156];  % -overshoot -settletime
+% PID0 = [0.145 16.47 0.156];  % -overshoot -settletime
+% PID0 = [0.075 16.47 0.156];  % -overshoot -settletime
+% PID0 = [0.075 16.00 0.178];  % -overshoot -settletime
 
 % K at breakaway point: K = Kd = 0.0011
 % Kd_q1 = 0.0011;
@@ -136,7 +154,7 @@ FB1 = FB0;
 % The Time vector must range from 0 to TotalTime
 Time       = 0:SampleTime:TotalTime;       % DO NOT CHANGE TotalTime
 % Time = 0:0.125:TotalTime;
-% Time = 0:0.5:(0.5 * 160);
+% Time = 0:0.25:(0.25 * 160);
 
 % ==========================================
 % Final PID transfer functions
