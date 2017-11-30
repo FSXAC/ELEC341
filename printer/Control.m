@@ -59,7 +59,7 @@ kgh_q1    = ol_q1 * tf(zeroes_q1, [1, 0]);
 KU_q1     = margin(minreal(tf(kgh_q1)));
 Kd_q1       = KU_q1 / 2;
 Kp_q1       = Kd_q1 * zeroes_q1(2);
-Ki_q1       = Kp_q1 * zeroes_q1(3);
+Ki_q1       = Kd_q1 * zeroes_q1(3);
 startPID_q1 = [Kp_q1, Ki_q1, Kd_q1];
 
 % Open loop transfer function of q1 with PID
@@ -84,10 +84,34 @@ PID0 = [1 0 0];
 PID1 = [1 0 0];
 
 % PID0 = startPID_q0;
+% PID0 = [0.0871, 4.3210, 0.0447];    % Trial 1 (starting)
+% PID0 = [0.0671, 4.3210, 0.0447];    % Trial 2 (decreased overshoot)
+% PID0 = [0.0771, 4.5210, 0.0447];    % Trial 3 (decrease risetime)
+% PID0 = [0.0791, 4.8210, 0.0447];    % Trial 4 (decrease risetime)
+% PID0 = [0.0821, 5.3210, 0.0447];    % Trial 5 (decrease risetime)
+% PID0 = [0.0821, 5.3210, 0.0517];    % Trial 6 (decrease overshoot)
+% PID0 = [0.0921, 5.3210, 0.0517];    % Trial 7 (decrease risetime)
+% PID0 = [0.102, 5.3210, 0.0517];    % Trial 8 (decrease risetime)
+% PID0 = [0.102, 5.1210, 0.0537];    % Trial 8 (decrease settletime and overshoot)
+% PID0 = [0.122, 5.1210, 0.0537];    % Trial 8 (decrease risetime)
+% Not working
 
-% PID0 = [1.5024184383397 5.58181210407204 0.098054291994374];
-PID0 = [1.4500 14.0000 0.2800];
-PID1 = [0.238 0.131 0.0192];
+% Different approach, K = K at breakaway point - K = Kd = 0.0717
+% Kd_q0 = 0.0717;
+Kd_q0 = 0.0648;
+Kp_q0 = Kd_q0 * zeroes_q0(2);
+Ki_q0 = Kd_q0 * zeroes_q0(3);
+startPID_q0 = [Kp_q0, Ki_q0, Kd_q0];
+PID0 = startPID_q0;
+
+% K at breakaway point: K = Kd = 0.0011
+% Kd_q1 = 0.0011;
+% Kd_q1 = 0.00863;
+Kd_q1 = 0.0028;
+Kp_q1 = Kd_q1 * zeroes_q1(2);
+Ki_q1 = Kd_q1 * zeroes_q1(3);
+startPID_q1 = [Kp_q1, Ki_q1, Kd_q1];
+PID1 = startPID_q1;
 
 % Enter feedback sensor values here.
 % The feedback gain maps voltage (V) from [-5, 5] to angles (rad) [-pi, pi]
@@ -110,7 +134,9 @@ FB1 = FB0;
 % In the Matlab window, enter "length(Time)" to see how big it is.
 
 % The Time vector must range from 0 to TotalTime
-% Time       = 0:SampleTime:TotalTime;       % DO NOT CHANGE TotalTime
+Time       = 0:SampleTime:TotalTime;       % DO NOT CHANGE TotalTime
+% Time = 0:0.125:TotalTime;
+% Time = 0:0.5:(0.5 * 160);
 
 % ==========================================
 % Final PID transfer functions

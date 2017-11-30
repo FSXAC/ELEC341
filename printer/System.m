@@ -92,6 +92,12 @@ q0 = MotorParam .* motor_param_unit_convert;
 AMAX12_p75W_SB;
 q1 = MotorParam .* motor_param_unit_convert;
 
+% Motor current limit
+NomI0   = q0(NomCurr);          % Max average current
+StallI0 = q0(StallCurr);        % Max peak current
+NomI1   = q1(NomCurr);          % Max average current
+StallI1 = q1(StallCurr);        % Max peak current
+
 % =============================
 % Q0 : Rotation about y-axis
 % =============================
