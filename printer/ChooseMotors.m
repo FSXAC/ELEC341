@@ -1,3 +1,5 @@
+% initialize everything
+System;
 AMAX12_p75W_SB;
 motor_1 = MotorParam;
 AMAX16_2W_SB;
@@ -27,12 +29,12 @@ settleTimes = zeros(1, 5);
 overshoots = zeros(1, 5);
 for i = 1:size(motors_param, 2)
     q1 = motors_param(1:end, i) .* motor_param_unit_convert;
-    System;
+    SystemHeadless;
     Control;
 
     % Compare system step responses of q0
     stepRes = stepinfo(ol_q0);
-    disp(stepRes);
+    % disp(stepRes);
 
     % Record values
     riseTimes(i) = stepRes.RiseTime;
@@ -41,7 +43,7 @@ for i = 1:size(motors_param, 2)
 end
 
 % Compare these motors at large
-figure;
+figure(1);
 subplot(2, 2, 1);
 bar(motors_name, riseTimes);
 title('Rise time');
@@ -52,3 +54,45 @@ subplot(2, 2, 3);
 bar(motors_name, overshoots);
 title('Overshoot');
 ylim([0, 100]);
+
+% Now assigning motor 1 to be the best motor from previous experiment
+q1 = motors_param(1:end, 1) .* motor_param_unit_convert;
+
+% Try each motor for q0 to see which one performs better
+for i = 1:size(motors_param, 2)
+    q0 = motors_param(1:end, i) .* motor_param_unit_convert;
+    SystemHeadless;
+    Control;
+
+    % Get and record step response
+    stepRes = stepinfo(ol_q0);
+    disp(stepRes);
+    riseTimes(i) = stepRes.RiseTime;
+    settleTimes(i) = stepRes.SettlingTime;
+    overshoots(i) = stepRes.Overshoot;
+end
+
+% Plot the performance for Q0
+figure(2);
+subplot(2, 2, 1);
+bar(motors_name, riseTimes);
+title('Rise time');
+subplot(2, 2, 2);
+bar(motors_name, settleTimes);
+title('Settle time');
+subplot(2, 2, 3);
+bar(motors_name, overshoots);
+title('Overshoot');
+ylim([0, 100]);
+
+% =====================[After choosing best motors]========================
+q0 = motors_param(1:end, 5) .* motor_param_unit_convert;
+q1 = motors_param(1:end, 1) .* motor_param_unit_convert;
+
+figure(3);
+subplot(2, 1, 1);
+step(ol_q0);
+title('Q0 open loop step response');
+subplot(2, 1, 2);
+step(ol_q1);
+title('Q1 open loop step response');
