@@ -135,7 +135,9 @@ Kp_q1 = Kd_q1 * zeroes_q1(2);
 Ki_q1 = Kd_q1 * zeroes_q1(3);
 startPID_q1 = [Kp_q1, Ki_q1, Kd_q1];
 PID1 = startPID_q1;
-PID1 = [0.1377 0 0.0028];   % start
+% PID1 = [0.1377 0 0.0028];   % 3.467
+PID1 = [0.1366 0 0.0028];   % 3.643
+
 % PID1 = [0.142 0 0.0028];   % -rt
 % PID1 = [0.142 0 0.0032];   % -os
 % PID1 = [0.16 0 0.004];   % -os
