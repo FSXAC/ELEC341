@@ -120,7 +120,9 @@ PID1 = [1 0 0];
 % PID0 = [0.1 9.7 0.098];  % -risetime -overshoot
 % PID0 = [0.1 9.5 0.099];  % -risetime -overshoot
 
-PID0 = [0.077 9.65 0.100];  % -risetime -overshoot
+%PID0 = [0.077 9.65 0.100];  % -risetime -overshoot
+PID0 = [0.065 9.65 0.100];
+PID0 = [0.07 9.65 0.100]; % #1 3.326 BEST AT THE MOMENT
 
 % Different approach - the internet approach
 % PID0 = [0.6 0 0]; % start (steady oscillation)
@@ -136,17 +138,10 @@ Ki_q1 = Kd_q1 * zeroes_q1(3);
 startPID_q1 = [Kp_q1, Ki_q1, Kd_q1];
 PID1 = startPID_q1;
 % PID1 = [0.1377 0 0.0028];   % 3.467
-PID1 = [0.1366 0 0.0028];   % 3.643
+%PID1 = [0.1366 0 0.0028];   % 3.643
+PID1 = [0.1366 0 0.0028] % #1 3.326 BEST AT THE MOMENT
 
-% PID1 = [0.142 0 0.0028];   % -rt
-% PID1 = [0.142 0 0.0032];   % -os
-% PID1 = [0.16 0 0.004];   % -os
-% PID1 = [0.164 0 0.005];   % -os
-% PID1 = [0.169 0 0.005];   % -rt
-% PID1 = [0.173 0 0.005];   % -rt
-% PID1 = [0.175 0 0.006];   % -rt
 
-% PID1 = [0.185 0 0.007];   % -rt
 
 % Enter feedback sensor values here.
 % The feedback gain maps voltage (V) from [-5, 5] to angles (rad) [-pi, pi]
