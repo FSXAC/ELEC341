@@ -189,3 +189,8 @@ cltf_q1 = g_cl_q1 / (1 + g_cl_q1);
 
 %some useful commands 
 %[k,poles] = rlocfind(sys)
+
+% Plot nyquist plots
+nyqlog(g_cl_q0);
+hold on
+nyqlog(g_cl_q1);
