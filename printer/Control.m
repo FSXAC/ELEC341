@@ -37,6 +37,9 @@ kgh_q0 = pid_zp_q0 * ol_q0;
 % Find ultimate gain when system becomes unstable
 KU_q0 = margin(tf(kgh_q0));
 
+%Kd_q0_trial=0.0718
+%Kd_q1_trial=0.000624
+
 % Find starting gains
 Kd_q0       = KU_q0 / 2;
 Kp_q0       = Kd_q0 * zeroes_q0(2);
@@ -52,7 +55,7 @@ pid_q0 = Kd_q0 * tf([1, (Kp_q0 / Kd_q0), (Ki_q0 / Kd_q0)], [1, 0]);
 % Open loop transfer function of q0 with PID
 ol_pid_q0 = pid_q0 * ol_q0;
 
-% === Q1 ====
+% === Q1 ================================================================
 % Same thing
 zeroes_q1 = [1, 49.17, 0];
 kgh_q1    = ol_q1 * tf(zeroes_q1, [1, 0]);
@@ -86,8 +89,19 @@ PID1 = [1 0 0];
 % PID0 = startPID_q0;
 
 % PID0 = [1.5024184383397 5.58181210407204 0.098054291994374];
-PID0 = [1.4500 14.0000 0.2800];
-PID1 = [0.238 0.131 0.0192];
+%input trial pid values here
+
+% p i d
+
+%PID0 = [0.14 6.9481 0.0718]; initial trial
+%PID1 = [0.0307 0 0.000624 ];
+%PID0 = [0.14 6.9481 0.0718]; better 
+%PID1 = [0.1 0 0.000624 ];
+%PID0 = [0.3 6.9481 0.1];  even better?
+%PID1 = [0.1 0 0.000624 ];
+
+%PID0 = [0.4 6.9481 0.1];  another trial.... beginning unstable
+%PID1 = [0.1 0 0.0005 ];
 
 % Enter feedback sensor values here.
 % The feedback gain maps voltage (V) from [-5, 5] to angles (rad) [-pi, pi]
@@ -111,7 +125,7 @@ FB1 = FB0;
 
 % The Time vector must range from 0 to TotalTime
 % Time       = 0:SampleTime:TotalTime;       % DO NOT CHANGE TotalTime
-
+Time       = 0:0.125:0.125*160
 % ==========================================
 % Final PID transfer functions
 % ==========================================
