@@ -169,7 +169,7 @@ FB1 = FB0;
 % In the Matlab window, enter "length(Time)" to see how big it is.
 
 % The Time vector must range from 0 to TotalTime
-Time       = 0:SampleTime:TotalTime;       % DO NOT CHANGE TotalTime
+% Time       = 0:SampleTime:TotalTime;       % DO NOT CHANGE TotalTime
 % Time = 0:0.125:TotalTime;
 % Time = 0:0.25:(0.25 * 160);
 
