@@ -98,29 +98,34 @@ PID1 = [1 0 0];
 
 % Different approach, K = K at breakaway point - K = Kd = 0.0717
 % Kd_q0 = 0.0717;
-Kd_q0 = 0.0648;
-Kp_q0 = Kd_q0 * zeroes_q0(2);
-Ki_q0 = Kd_q0 * zeroes_q0(3);
-startPID_q0 = [Kp_q0, Ki_q0, Kd_q0];
-PID0 = startPID_q0;
-PID0 = [0.1464 6.2707 0.0648];  % -risetime
-PID0 = [0.1664 6.2707 0.0648];  % -risetime
-PID0 = [0.166 6.47 0.0648];  % -risetime
-PID0 = [0.166 6.47 0.0660];  % -overshoot -settletime
-PID0 = [0.166 6.47 0.0780];  % -overshoot -settletime
-PID0 = [0.166 7.47 0.0780];  % -risetime -overshoot
-PID0 = [0.166 7.47 0.0880];  % -overshoot -settletime
-PID0 = [0.166 7.47 0.0940];  % -overshoot -settletime
-PID0 = [0.166 8.47 0.0940];  % -risetime -overshoot
-% PID0 = [0.175 8.47 0.0940];  % -risetime
-% PID0 = [0.166 9.47 0.106];  % -overshoot -settletime
-% PID0 = [0.166 10.47 0.126];  % -overshoot -settletime
-% PID0 = [0.156 10.47 0.126];  % -overshoot -settletime
-% PID0 = [0.156 13.47 0.156];  % -overshoot -settletime
-% PID0 = [0.145 13.47 0.156];  % -overshoot -settletime
-% PID0 = [0.145 16.47 0.156];  % -overshoot -settletime
-% PID0 = [0.075 16.47 0.156];  % -overshoot -settletime
-% PID0 = [0.075 16.00 0.178];  % -overshoot -settletime
+% Kd_q0 = 0.0648;
+% Kp_q0 = Kd_q0 * zeroes_q0(2);
+% Ki_q0 = Kd_q0 * zeroes_q0(3);
+% startPID_q0 = [Kp_q0, Ki_q0, Kd_q0];
+% PID0 = startPID_q0;
+
+% PID0 = [0.1464 6.2707 0.0648];  % -risetime
+% PID0 = [0.1664 6.2707 0.0648];  % -risetime
+% PID0 = [0.166 6.47 0.0648];  % -risetime
+% PID0 = [0.166 6.47 0.0660];  % -overshoot -settletime
+% PID0 = [0.166 6.47 0.0780];  % -overshoot -settletime
+% PID0 = [0.166 7.47 0.0780];  % -risetime -overshoot
+% PID0 = [0.166 7.47 0.0880];  % -overshoot -settletime
+% PID0 = [0.166 7.47 0.0940];  % -overshoot -settletime
+% PID0 = [0.166 8.47 0.0940];  % -risetime -overshoot
+% PID0 = [0.123 8.47 0.0940];  % -risetime -overshoot
+
+% PID0 = [0.1 9.5 0.1];  % -risetime -overshoot
+% PID0 = [0.1 9.7 0.1];  % -risetime -overshoot
+% PID0 = [0.1 9.7 0.098];  % -risetime -overshoot
+% PID0 = [0.1 9.5 0.099];  % -risetime -overshoot
+
+PID0 = [0.077 9.65 0.100];  % -risetime -overshoot
+
+% Different approach - the internet approach
+% PID0 = [0.6 0 0]; % start (steady oscillation)
+% % Kcr = 0.6
+% PID0 = [0.36 ]
 
 % K at breakaway point: K = Kd = 0.0011
 % Kd_q1 = 0.0011;
@@ -130,6 +135,16 @@ Kp_q1 = Kd_q1 * zeroes_q1(2);
 Ki_q1 = Kd_q1 * zeroes_q1(3);
 startPID_q1 = [Kp_q1, Ki_q1, Kd_q1];
 PID1 = startPID_q1;
+PID1 = [0.1377 0 0.0028];   % start
+% PID1 = [0.142 0 0.0028];   % -rt
+% PID1 = [0.142 0 0.0032];   % -os
+% PID1 = [0.16 0 0.004];   % -os
+% PID1 = [0.164 0 0.005];   % -os
+% PID1 = [0.169 0 0.005];   % -rt
+% PID1 = [0.173 0 0.005];   % -rt
+% PID1 = [0.175 0 0.006];   % -rt
+
+% PID1 = [0.185 0 0.007];   % -rt
 
 % Enter feedback sensor values here.
 % The feedback gain maps voltage (V) from [-5, 5] to angles (rad) [-pi, pi]
