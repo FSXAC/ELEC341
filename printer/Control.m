@@ -9,7 +9,6 @@ DEBUG = true;
 zeroes_q0 = [1.000 1.950 96.77];
 zeroes_q1 = [1.000 49.17 0.000];
 
-
 % ==========================================
 % PID Controller gain tuning
 % ==========================================
@@ -39,7 +38,7 @@ startPID_q0 = [Kp_q0, Ki_q0, Kd_q0];
 
 % PID0 = [0.077 9.65 0.100];        % Intermediate
 % PID0 = [0.065 9.65 0.100];        % Intermediate
-PID0 = [0.07 9.65 0.100];           % [FINAL VALUES]
+% PID0 = [0.07 9.65 0.100];           % [FINAL VALUES]
 
 % K at breakaway point: K = Kd = 0.0028
 Kd_q1 = 0.0028;
@@ -49,7 +48,7 @@ startPID_q1 = [Kp_q1, Ki_q1, Kd_q1];
 % PID1 = startPID_q1;               % [STARTING VALUES]
 % PID1 = [0.1377 0 0.0028];         % [STARTING VALUES]
 % PID1 = [0.1366 0 0.0028];         % Intermediate
-PID1 = [0.1366 0 0.0028];           % [FINAL VALUES]
+% PID1 = [0.1366 0 0.0028];           % [FINAL VALUES]
 
 % ==========================================
 % CONTROLLER GAINS
