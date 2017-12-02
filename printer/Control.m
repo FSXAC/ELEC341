@@ -141,8 +141,6 @@ PID1 = startPID_q1;
 %PID1 = [0.1366 0 0.0028];   % 3.643
 PID1 = [0.1366 0 0.0028] % #1 3.326 BEST AT THE MOMENT
 
-
-
 % Enter feedback sensor values here.
 % The feedback gain maps voltage (V) from [-5, 5] to angles (rad) [-pi, pi]
 % The gain has the units (rad/V)
@@ -165,8 +163,32 @@ FB1 = FB0;
 
 % The Time vector must range from 0 to TotalTime
 % Time       = 0:SampleTime:TotalTime;       % DO NOT CHANGE TotalTime
-% Time = 0:0.125:TotalTime;
-% Time = 0:0.25:(0.25 * 160);
+Time(2) = Time(2) + SampleTime * 0.1;
+% Time(48) = Time(48) + SampleTime * 0.1;
+% Time(5) = Time(5) * 1.15;
+% Time(6) = Time(6) * 1.1;
+
+% 0-4
+% SlowSampleTime = SampleTime * 1.1;
+% Start1 = 0;
+% Stop1 = Start1 + 3 * SlowSampleTime;
+% Time = 0:SlowSampleTime:Stop1;
+% % 4-47 (difference of 43)
+% Start2 = Stop1 + SampleTime;
+% Stop2 = Start2 + 42 * SampleTime;
+% Time = [Time, Start2:SampleTime:Stop2];
+% % 47-51 (difference of 4)
+% Start3 = Stop2 + SlowSampleTime;
+% Stop3 = Start3 + 3 * SlowSampleTime;
+% Time = [Time, Start3:SlowSampleTime:Stop3];
+% % 52-161 (difference of 109)
+% NewSampleTime = (TotalTime - Stop3) / (109 + 1);
+% Start4 = Stop3 + NewSampleTime;
+% Time = [Time, Start4:NewSampleTime:TotalTime];
+
+
+
+
 
 % ==========================================
 % Final PID transfer functions
@@ -192,5 +214,5 @@ cltf_q1 = g_cl_q1 / (1 + g_cl_q1);
 
 % Plot nyquist plots
 nyqlog(g_cl_q0);
-hold on
+hold on;
 nyqlog(g_cl_q1);
